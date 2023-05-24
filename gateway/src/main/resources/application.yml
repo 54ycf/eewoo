@@ -1,0 +1,63 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: chat_route
+          uri: lb://chat-service
+          predicates:
+            - Path=/chat/**
+
+        - id: visitor_route
+          uri: lb://platform-service
+          predicates:
+            - Path=/visitor/**
+        - id: admin_route
+          uri: lb://platform-service
+          predicates:
+            - Path=/admin/**
+        - id: counselor_route
+          uri: lb://platform-service
+          predicates:
+            - Path=/counselor/**
+        - id: supervisor_route
+          uri: lb://platform-service
+          predicates:
+            - Path=/supervisor/**
+
+        - id: account_route
+          uri: lb://auth-service
+          predicates:
+            - Path=/account/**
+        - id: auth_route
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+
+
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOrigins: "*"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+#              - DELETE
+
+
+#    sentinel:
+#      transport:
+#        dashboard: localhost:9090

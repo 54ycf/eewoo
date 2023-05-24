@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eewoo.platform.mapper.VisitorMapper">
+
+
+
+<!--    <select id="test1" parameterType="Integer" resultType="com.eewoo.platform.pojo.Admin">-->
+<!--        select * from user_admin where id = #{id};-->
+<!--    </select>-->
+<!--    <select id="searchDepartmentStudents" parameterType="com.ecnu.vo.param.DepartmentYearParam" resultType="com.ecnu.student.vo.StudentVo">-->
+<!--        select * from student where department=#{department} and date_format(`in_date`,'%Y')=#{gradeYear};-->
+<!--    </select>-->
+
+
+<!--    <update id="updateStudent" parameterType="com.ecnu.bo.StudentBo">-->
+<!--        update student-->
+<!--        set name=#{name},password=#{password},sex=#{sex},department=#{department},email=#{email},phone=#{phone},in_date=#{inDate},out_date=#{outDate}-->
+<!--        where stu_no=#{stuNo}-->
+<!--    </update>-->
+
+</mapper>

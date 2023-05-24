@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.116.21.188:8844
+        username: nacos
+        password: nacos
+        namespace: public
+      config:
+        server-addr: 47.116.21.188:8844
+        enabled: true
+  application:
+    name: api-gateway
