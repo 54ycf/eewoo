@@ -3,10 +3,14 @@ package com.eewoo.platform.controller;
 import com.eewoo.platform.pojo.vo.request.DisableUserRequest;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.feign.AuthFeign;
+import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
+import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import com.eewoo.platform.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @PreAuthorize("hasAuthority('a')")
 @RestController
@@ -29,4 +33,30 @@ public class AdminController {
         adminService.disableUser(disableUser.getId(), disableUser.getRole());
         return R.ok();
     }
+
+
+    @GetMapping("/consul_records")
+    public R getSessions(){
+        List<SessionResponse> sessionResponses=adminService.getSessions();
+        return R.ok(sessionResponses);
+    }
+
+    @GetMapping("/consultant")
+    public R getCounselors(){
+        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getCounselors();
+        return R.ok(counselorSupervisorResponses);
+    }
+
+    @GetMapping("/supervisor")
+    public R getSupervisors(){
+        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getSupervisors();
+        return R.ok(counselorSupervisorResponses);
+    }
+
+
+
+
+
+
+
 }
