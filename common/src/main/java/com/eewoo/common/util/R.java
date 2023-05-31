@@ -1,5 +1,9 @@
 package com.eewoo.common.util;
 
+/**
+ * 负责处理所有的返回信息，利用R的泛型对于成功或者失败的信息统一封装，减轻Controller层开发难度
+ * @param <T>
+ */
 public class R<T> {
     private String code;
     private String msg;

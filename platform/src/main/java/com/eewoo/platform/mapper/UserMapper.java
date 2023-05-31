@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface UserMapper {
+public interface UserMapper{
     @Update("UPDATE ${table} SET banned = 1 WHERE id = #{id}")
     int disableUser(@Param("id") Integer id, @Param("table") String table);
+
 }

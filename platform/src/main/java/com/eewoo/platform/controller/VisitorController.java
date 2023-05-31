@@ -25,7 +25,7 @@ public class VisitorController {
 
 
     @GetMapping("/info")
-    public R getInfo(){
+    public R getInfo() {
         VisitorResponse info = visitorService.getInfo();
         if (info==null)
             return R.err("无此访客");

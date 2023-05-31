@@ -45,4 +45,9 @@ mybatis:
     map-underscore-to-camel-case: true
 #  type-aliases-package: com.eewoo.pojo
 
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 
