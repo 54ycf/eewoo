@@ -14,11 +14,11 @@ public interface AuthFeign {
     R<LoginUser> parseToken(@RequestParam("token") String token);
 
     @PutMapping("/account/disable")
-    R logout(@RequestParam Integer id, @RequestParam String role);
+    R logout(@RequestParam Integer id, @RequestParam String role, @RequestHeader String token);
 
     @PostMapping("/account/add-counselor")
-    R addCounselor(@RequestBody Counselor counselor);
+    R addCounselor(@RequestBody Counselor counselor, @RequestHeader String token);
 
     @PostMapping("/account/add-supervisor")
-    R addSupervisor(@RequestBody Supervisor supervisor);
+    R addSupervisor(@RequestBody Supervisor supervisor, @RequestHeader String token);
 }

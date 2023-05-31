@@ -30,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Autowired
-//    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
 //    @Autowired
 //    private AuthenticationEntryPoint authenticationEntryPoint;
@@ -49,12 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/chat/*").anonymous()
+//                .antMatchers("/chat/*").anonymous()
+                .antMatchers("/imserver/*").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
 
-//        //把token校验过滤器添加到过滤器链中
-//        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        //把token校验过滤器添加到过滤器链中
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //
 //        //配置异常处理器
 //        http.exceptionHandling()

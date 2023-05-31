@@ -17,4 +17,8 @@ public class Constant {
         put("v","user_visitor");
     }};
 
+    /**
+     * 访客最多接待树木
+     */
+    public static final int MAX_CHAT = 3;
 }
