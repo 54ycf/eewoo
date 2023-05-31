@@ -25,7 +25,7 @@ public class AdminController {
      */
     @PutMapping("/disable")
     public R disableUser(@RequestBody DisableUserRequest disableUser){
-        authFeign.logout(disableUser.getId(), disableUser.getRole()); //远程清除redis缓存
+        authFeign.logout(disableUser.getId(), disableUser.getRole()); //远程清除redis缓存,抹除用户痕迹
         adminService.disableUser(disableUser.getId(), disableUser.getRole());
         return R.ok();
     }
