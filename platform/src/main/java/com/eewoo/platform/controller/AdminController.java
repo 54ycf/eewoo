@@ -9,6 +9,10 @@ import com.eewoo.platform.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -22,6 +26,10 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
+    String getToken(){
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("token");
+    }
+
     /**
      * 禁用用户，MySQL字段更新，auth-service的缓存清除
      * @param disableUser
@@ -29,7 +37,7 @@ public class AdminController {
      */
     @PutMapping("/disable")
     public R disableUser(@RequestBody DisableUserRequest disableUser){
-        authFeign.logout(disableUser.getId(), disableUser.getRole()); //远程清除redis缓存
+        authFeign.logout(disableUser.getId(), disableUser.getRole(), getToken()); //远程清除redis缓存
         adminService.disableUser(disableUser.getId(), disableUser.getRole());
         return R.ok();
     }

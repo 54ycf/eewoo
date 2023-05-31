@@ -8,6 +8,10 @@ spring:
           uri: lb://chat-service
           predicates:
             - Path=/chat/**
+        - id: im_route
+          uri: lb:ws://chat-service
+          predicates:
+            - Path=/imserver/**
 
         - id: visitor_route
           uri: lb://platform-service
