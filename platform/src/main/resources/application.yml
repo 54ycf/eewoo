@@ -6,7 +6,6 @@ spring:
     password: yi!wu!
     host: 139.9.157.50
     port: 6379
-
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -45,3 +44,5 @@ mybatis:
     jdbc-type-for-null: 'null'
     map-underscore-to-camel-case: true
 #  type-aliases-package: com.eewoo.pojo
+
+

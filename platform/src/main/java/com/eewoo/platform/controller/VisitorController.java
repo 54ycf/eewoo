@@ -1,5 +1,6 @@
 package com.eewoo.platform.controller;
 
+import com.eewoo.common.pojo.Chat;
 import com.eewoo.common.pojo.Session;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.vo.request.CommentRequest;
@@ -21,6 +22,7 @@ import java.util.List;
 public class VisitorController {
     @Autowired
     VisitorService visitorService;
+
 
     @GetMapping("/info")
     public R getInfo(){
@@ -53,7 +55,7 @@ public class VisitorController {
     @PostMapping("/consult")
     public R createSession(@RequestBody Session session){
         int id=visitorService.createSession(session);
-        if(id>=0){
+        if(id>0){
             return R.ok(id);
         }
         return R.err("-1","创建会话失败！");

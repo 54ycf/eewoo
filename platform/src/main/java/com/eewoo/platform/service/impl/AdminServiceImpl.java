@@ -29,13 +29,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<SessionResponse> getSessions() {
-        List<Session> sessions= adminMapper.getSessions();
-        List<SessionResponse> sessionResponses=new ArrayList<>();
-        for (int i=0;i<sessions.size();i++){
-            SessionResponse sessionResponse=new SessionResponse();
-            BeanUtils.copyProperties(sessions.get(i),sessionResponse);
-            sessionResponses.add(sessionResponse);
-        }
+        List<SessionResponse> sessionResponses= adminMapper.getSessions();
         return sessionResponses;
     }
 
@@ -47,6 +41,12 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<CounselorSupervisorResponse> getSupervisors() {
         return adminMapper.getCounselorsAndSupervisors();
+    }
+
+    @Override
+    public int removeCounselor(Integer id) {
+        int ok=adminMapper.deleteCounselor(id);
+        return ok;
     }
 
 }

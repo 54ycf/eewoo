@@ -53,10 +53,12 @@ public class AdminController {
         return R.ok(counselorSupervisorResponses);
     }
 
-
-
-
-
-
-
+    @DeleteMapping("/consultant/{id}")
+    public R removeCounselor(@PathVariable("id")Integer id){
+        int ok=adminService.removeCounselor(id);
+        if(ok>0){
+            return R.ok();
+        }
+        return R.err("-1","没有找到要删除的数据");
+    }
 }
