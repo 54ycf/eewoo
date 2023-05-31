@@ -5,6 +5,7 @@ import com.alibaba.druid.support.monitor.annotation.MTable;
 
 public class Consult {
 
+
     String visitorName;
     String startTime;
     String endTime;

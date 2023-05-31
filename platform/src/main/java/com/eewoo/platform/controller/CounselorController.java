@@ -27,9 +27,9 @@ public class CounselorController {
 //    }
 
     @GetMapping("/consult-list")
-    public R getConsultList(@Param("id") Integer counselorId)
+    public R getConsultList()
     {
-        List<Consult> list = counselorService.getConsult(counselorId);
+        List<Consult> list = counselorService.getConsult();
         return R.ok(list);
         }
 

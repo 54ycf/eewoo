@@ -24,4 +24,6 @@ public interface CounselorMapper {
 
     @Select("SELECT name, start_time, end_time, duration FROM session join user_visitor on id WHERE counselor_id = #{id}")
     List<Consult> getAllConsults(@Param("id") Integer counselorId);
+
+
 }

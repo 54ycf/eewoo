@@ -21,7 +21,12 @@ public class CounselorServiceImpl implements CounselorService {
     CounselorMapper mapper;
 
     @Override
-    public List<Consult> getConsult(Integer id) {
+    public List<Consult> getConsult() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        /*
+         * 通过token获取counselor用户的id，交给mapper层返回符合资格的访客列表
+         */
          return mapper.getAllConsults(id);
     }
 
