@@ -48,7 +48,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
 
-
+    @Autowired
     PlatformFeign platformFeign;
 
     static Random random = new Random();
