@@ -1,6 +1,5 @@
 package com.eewoo.platform.mapper;
 
-import com.eewoo.common.pojo.Session;
 import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import org.apache.ibatis.annotations.Delete;

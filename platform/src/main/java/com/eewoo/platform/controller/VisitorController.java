@@ -1,8 +1,8 @@
 package com.eewoo.platform.controller;
 
-import com.eewoo.common.pojo.Session;
+import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.util.R;
-import com.eewoo.platform.pojo.vo.request.CommentRequest;
+import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
@@ -42,15 +42,15 @@ public class VisitorController {
     }
 
     @PostMapping("/comment")
-    public R giveCounselorComment(@RequestBody CommentRequest commentRequest){
-        visitorService.giveCounselorComment(commentRequest.getSessionId(),
-                commentRequest.getVisitorFeedback(),
-                commentRequest.getVisitorFeedbackScore());
+    public R giveCounselorComment(@RequestBody VisitorCommentRequest visitorCommentRequest){
+        visitorService.giveCounselorComment(visitorCommentRequest.getSessionId(),
+                visitorCommentRequest.getVisitorFeedback(),
+                visitorCommentRequest.getVisitorFeedbackScore());
         return R.ok();
     }
 
     @PostMapping("/consult")
-    public R createSession(@RequestBody Session session){
+    public R createSession(@RequestBody SessionRequest session){
         int id=visitorService.createSession(session);
         if(id>0){
             return R.ok(id);

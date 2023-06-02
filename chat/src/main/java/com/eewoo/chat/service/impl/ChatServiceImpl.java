@@ -3,6 +3,10 @@ package com.eewoo.chat.service.impl;
 
 import com.eewoo.chat.service.ChatService;
 import com.eewoo.chat.pojo.Chat;
+import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
+import com.eewoo.common.pojo.vo.request.SessionRequest;
+import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
+import com.eewoo.common.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,6 +29,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.websocket.Session;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -102,8 +107,11 @@ public class ChatServiceImpl implements ChatService {
     public void visitorComment(VisitorComment visitorComment) {
         String chatToken = visitorComment.getChatToken();
         ChatInfo chatInfo = WebSocketServer.tokenInfoMap.get(chatToken);
-//  TODO      platformFeign.vcomment(sessionId, visitorFeedback, visitorFeedbackScore);
-
+        VisitorCommentRequest visitorCommentRequest = new VisitorCommentRequest();
+        visitorCommentRequest.setSessionId(chatInfo.getSessionId());
+        visitorCommentRequest.setVisitorFeedback(visitorComment.getVisitorFeedback());
+        visitorCommentRequest.setVisitorFeedbackScore(visitorComment.getVisitorFeedbackScore());
+        platformFeign.giveCounselorComment(visitorCommentRequest, getToken());
         //移除访客的chatToken和相关信息
         WebSocketServer.tokenInfoMap.remove(chatToken);
     }
@@ -112,7 +120,11 @@ public class ChatServiceImpl implements ChatService {
     public void counselorComment(CounselorComment counselorComment) {
         String chatToken = counselorComment.getChatToken();
         ChatInfo chatInfo = WebSocketServer.tokenInfoMap.get(chatToken);
-//   TODO     platformFeign.ccomment(sessonId, counselorFeedback, type);
+        CounselorCommentRequest counselorCommentRequest = new CounselorCommentRequest();
+        counselorCommentRequest.setSessionId(chatInfo.getSessionId());
+        counselorCommentRequest.setFeedback(counselorComment.getCounselorFeedback());
+        counselorCommentRequest.setType(counselorComment.getType());
+        platformFeign.giveVisitorComment(counselorCommentRequest, getToken());
 
         //清除咨询师的chatToken及其相关信息
         WebSocketServer.tokenInfoMap.remove(chatToken);
@@ -190,9 +202,13 @@ public class ChatServiceImpl implements ChatService {
      * @param counselorKey
      */
     private void makeVCSession(String visitorKey, String counselorKey){
-//  TODO          R r = platformFeign.makeSession(getToken());
-//                Integer sessionId = (Integer) r.getData();// 可以正式发起新的会话，得到的sessionId
-        Integer sessionId = 3;
+        SessionRequest sessionRequest = new SessionRequest();
+        sessionRequest.setCounselorId(Integer.parseInt(counselorKey.substring(2)));
+        sessionRequest.setVisitorId(Integer.parseInt(visitorKey.substring(2)));
+        sessionRequest.setStartTime(new Date());
+        R r = platformFeign.createSession(sessionRequest, getToken());
+        if (r==null) return;
+        Integer sessionId = (Integer) r.getData();// 可以正式发起新的会话，得到的sessionId
         String visitorChatToken = genChatToken(visitorKey, counselorKey, sessionId);
         String counselorChatToken = genChatToken(counselorKey, visitorKey, sessionId);
 

@@ -1,5 +1,6 @@
 package com.eewoo.platform.controller;
 
+import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.vo.request.c_Evaluation;
 import com.eewoo.platform.pojo.vo.response.Consult;
@@ -39,4 +40,15 @@ public class CounselorController {
      * 2.查找督导
      */
 
+    /**
+     * Feign-供chatService调用
+     * 咨询师给访客的会话做评价
+     * @param commentRequest 咨询师对访客（会话）的评价
+     * @return
+     */
+    @PostMapping("/comment")
+    public R giveVisitorComment(@RequestBody CounselorCommentRequest commentRequest){
+        counselorService.createEvaluation(commentRequest.getSessionId(), commentRequest.getFeedback(), commentRequest.getType());
+        return R.ok();
+    }
 }

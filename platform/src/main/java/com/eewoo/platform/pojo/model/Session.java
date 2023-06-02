@@ -1,9 +1,9 @@
-package com.eewoo.common.pojo;
+package com.eewoo.platform.pojo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class Session {

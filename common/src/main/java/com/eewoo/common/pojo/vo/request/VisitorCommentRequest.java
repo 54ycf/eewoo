@@ -1,10 +1,10 @@
-package com.eewoo.platform.pojo.vo.request;
+package com.eewoo.common.pojo.vo.request;
 
 
 import lombok.Data;
 
 @Data
-public class CommentRequest {
+public class VisitorCommentRequest {
     private Integer sessionId;
     private Integer visitorFeedbackScore;
     private String visitorFeedback;

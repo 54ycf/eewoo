@@ -1,12 +1,12 @@
 package com.eewoo.platform.service.impl;
 
 import com.eewoo.common.pojo.Counselor;
-import com.eewoo.common.pojo.Session;
+import com.eewoo.platform.pojo.model.Session;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.pojo.Visitor;
+import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.platform.mapper.VisitorMapper;
-import com.eewoo.platform.pojo.vo.request.SessionRequest;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -70,7 +68,9 @@ public class VisitorServiceImpl implements VisitorService {
     }
 
     @Override
-    public int createSession(Session session) {
+    public int createSession(SessionRequest sessionVo) {
+        Session session = new Session();
+        BeanUtils.copyProperties(sessionVo, session);
         int ok= visitorMapper.insertSession(session);
         if(ok==1){
             return session.getId();

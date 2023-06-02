@@ -1,7 +1,6 @@
 package com.eewoo.platform.service;
 
-import com.eewoo.common.pojo.Session;
-import com.eewoo.platform.pojo.vo.request.SessionRequest;
+import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
@@ -19,7 +18,7 @@ public interface VisitorService {
 
     void giveCounselorComment(Integer sessionId,String feedback,Integer score);
 
-    int createSession(Session session);
+    int createSession(SessionRequest session);
 
     List<SessionResponse> getHistorySessions();
 
