@@ -27,7 +27,7 @@ public interface AdminMapper {
             " uc.consult_cnt_today  as counselorConsultCntToday, uc.consult_duration_today   as counselorConsultDurationToday, " +
             "uc.age as counselorAge, uc.id_card as counselorIdCard, uc.phone as counselorPhone, uc.email as counselorEmail," +
             " uc.work_place as counselorWorkPlace, uc.title as counselorTitle, " +
-            "us.id  as supervisorId, us.username as supervisorUsername, us.password as supervisorPassword, " +
+            "us.id  as supervisorId, us.username as supervisorUsername, " +
             "us.banned as supervisorBanned, us.name as supervisorName, us.profile as supervisorProfile, " +
             "us.consult_duration_total as supervisorConsultDurationTotal, us.consult_cnt_today  as supervisorConsultCntToday," +
             " us.consult_duration_today as supervisorConsultDurationToday, us.age as supervisorAge, " +
