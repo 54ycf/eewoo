@@ -1,12 +1,9 @@
 package com.eewoo.platform.controller;
 
-import com.eewoo.common.pojo.Chat;
 import com.eewoo.common.pojo.Session;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.vo.request.CommentRequest;
-import com.eewoo.platform.pojo.vo.request.SessionRequest;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
-import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
 import com.eewoo.platform.service.VisitorService;

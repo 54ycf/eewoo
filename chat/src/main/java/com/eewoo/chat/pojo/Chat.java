@@ -1,5 +1,6 @@
-package com.eewoo.common.pojo;
+package com.eewoo.chat.pojo;
 
+import com.eewoo.common.pojo.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -2,7 +2,7 @@ package com.eewoo.chat.service.impl;
 
 
 import com.eewoo.chat.service.ChatService;
-import com.eewoo.common.pojo.Chat;
+import com.eewoo.chat.pojo.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -15,15 +15,12 @@ import com.eewoo.chat.pojo.CounselorComment;
 import com.eewoo.chat.pojo.SR;
 import com.eewoo.chat.pojo.VisitorComment;
 import com.eewoo.chat.service.ChatScheduler;
-import com.eewoo.chat.service.ChatService;
 import com.eewoo.chat.socket.WebSocketServer;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.common.util.Constant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
