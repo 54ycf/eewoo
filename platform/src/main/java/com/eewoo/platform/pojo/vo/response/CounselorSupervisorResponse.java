@@ -27,7 +27,6 @@ public class CounselorSupervisorResponse {
 
     Integer supervisorId;
     String supervisorUsername;
-    String supervisorPassword;
     Integer supervisorBanned;
     String supervisorName;
     String supervisorProfile;

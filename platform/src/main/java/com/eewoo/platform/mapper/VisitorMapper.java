@@ -3,12 +3,10 @@ package com.eewoo.platform.mapper;
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Session;
 import com.eewoo.common.pojo.Visitor;
-import com.eewoo.platform.pojo.vo.request.SessionRequest;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 @Mapper
