@@ -32,7 +32,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String login(User user) {
-        System.out.println("visited ！！");
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getRole()+"-"+user.getUsername(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         if(Objects.isNull(authenticate)){

@@ -26,7 +26,7 @@ public interface CounselorMapper {
     @Select("SELECT name, start_time, end_time, duration FROM session join user_visitor on id WHERE counselor_id = #{id}")
     List<Consult> getAllConsults(@Param("id") Integer counselorId);
 
-    @Update("UPDATE session SET end_time = #{endTime}, duration = UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time) WHERE id = #{sessionId}")
+    @Update("UPDATE session SET end_time = #{endTime}, duration = (UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time))/60 WHERE id = #{sessionId}")
     int endSession(Integer sessionId, Date endTime);
 
 }
