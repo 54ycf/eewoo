@@ -47,7 +47,7 @@ public class ChatScheduler {
 
     private void sendNotification(String chatToken) {
         ChatInfo chatInfo = WebSocketServer.tokenInfoMap.get(chatToken);
-        Session sessionTo = WebSocketServer.sessionMap.get(chatInfo.getReceiverKey());
+        Session sessionTo = WebSocketServer.sessionMap.get(chatInfo.getSenderKey());
         WebSocketServer.sendMessage(SR.boringNotify(chatToken), sessionTo);
     }
 

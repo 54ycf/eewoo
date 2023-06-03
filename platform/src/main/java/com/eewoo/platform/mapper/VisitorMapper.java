@@ -7,6 +7,7 @@ import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -35,4 +36,6 @@ public interface VisitorMapper {
     @Select("Select * from session where visitor_id=#{visitorId}")
     List<Session> getHistorySessions(Integer visitorId);
 
+    @Update("UPDATE session SET end_time = #{endTime}, duration = UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time) WHERE id = #{sessionId}")
+    int endSession(Integer sessionId, Date endTime);
 }

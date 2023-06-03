@@ -68,6 +68,9 @@ public class ChatServiceImpl implements ChatService {
             return false; //说明已经有了这二者之间的会话，不能再次发起会话
 
         List<String> waitingVisitors = WebSocketServer.waitingListMap.get(counselorKey);
+        if (waitingVisitors == null)
+            return false;
+
         waitingVisitors.add(visitorKey); //加入队列
         if (waitingVisitors.size() > Constant.MAX_CHAT) //排队人数超标，等待 // TODO 感觉这地方的并发访问一致性控制不够
             return false;
@@ -86,6 +89,8 @@ public class ChatServiceImpl implements ChatService {
         String senderKey = senderChatInfo.getSenderKey();
         String receiverKey = senderChatInfo.getReceiverKey();
         String receiverChatToken = WebSocketServer.chatMap.get(receiverKey + "->" + senderKey);
+        if (receiverChatToken == null)
+            return; //说明要么对方已经先发起会话过了，或者对方会话超时导致的你已经不需要再断会话了，这属于并发问题
         ChatInfo receiverChatInfo = WebSocketServer.tokenInfoMap.get(receiverChatToken);
         receiverChatInfo.setIsValid(false);
 
@@ -133,9 +138,11 @@ public class ChatServiceImpl implements ChatService {
         List<String> waitingVisitors = WebSocketServer.waitingListMap.get(chatInfo.getSenderKey());
         waitingVisitors.remove(chatInfo.getReceiverKey()); //receiver是访客
 
+        if (waitingVisitors.size() <= Constant.MAX_CHAT) {
+            return; //没有人排队，直接结束
+        }
         //v:1 将下一个排队成功访客加入进来
         String visitorKey = waitingVisitors.get(Constant.MAX_CHAT);
-        if (visitorKey == null) return;
         makeVCSession(visitorKey, chatInfo.getSenderKey());
     }
 
