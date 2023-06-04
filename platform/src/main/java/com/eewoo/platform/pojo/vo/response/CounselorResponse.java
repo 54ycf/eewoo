@@ -3,6 +3,8 @@ package com.eewoo.platform.pojo.vo.response;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class CounselorResponse {
     Integer id;
@@ -10,7 +12,7 @@ public class CounselorResponse {
     Integer banned;
     String name;
     String profile;
-    Integer consultDurationTotal;
+    Date consultDurationTotal;
     Integer consultCntTotal;
     Integer consultScoreTotal;
     Integer consultCntToday;

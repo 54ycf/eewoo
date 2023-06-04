@@ -2,9 +2,11 @@ package com.eewoo.common.pojo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Counselor extends User{
-    Integer consultDurationTotal;
+    Date consultDurationTotal;
     Integer consultCntTotal;
     Integer consultScoreTotal;
     Integer consultCntToday;

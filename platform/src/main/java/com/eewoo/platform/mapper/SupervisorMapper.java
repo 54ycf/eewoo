@@ -1,5 +1,6 @@
 package com.eewoo.platform.mapper;
 
+import com.eewoo.platform.pojo.RoughCouselor;
 import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
@@ -26,5 +27,7 @@ public interface SupervisorMapper {
     @Select("SELECT name FROM user_supervisor WHERE id = #{id}")
     String getName(@Param("id") Integer id);
 
-
+    //遇到问题，我们并没有存放counselor和supervissor的表格，先随机返回吧。
+    @Select("SELECT name,counselor.id counselor.profile FROM banned join user_supervisor join user_counselor WHERE supervisor.id = #{id}")
+    List<RoughCouselor> latelyChatCounselors(Integer id);
 }
