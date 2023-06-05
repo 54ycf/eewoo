@@ -16,7 +16,7 @@ public class Session {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endTime;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date duration;
+    private int duration;
     private String visitorFeedback;
     private int visitorFeedbackScore;
     private String counselorFeedback;

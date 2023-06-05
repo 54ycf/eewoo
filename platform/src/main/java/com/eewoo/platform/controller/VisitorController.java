@@ -1,5 +1,6 @@
 package com.eewoo.platform.controller;
 
+import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.util.R;
 import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
@@ -31,8 +32,8 @@ public class VisitorController {
 
     @GetMapping("/consultants")
     public R getCounselors(){
-        List<CounselorResponse> counselorResponses= visitorService.getCounselors();
-        return R.ok(counselorResponses);
+        List<CounselorResponse> counselors= visitorService.getCounselors();
+        return R.ok(counselors);
     }
 
     @GetMapping("/consultants/history")

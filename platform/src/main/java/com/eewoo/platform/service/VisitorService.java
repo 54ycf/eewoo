@@ -1,5 +1,6 @@
 package com.eewoo.platform.service;
 
+import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;

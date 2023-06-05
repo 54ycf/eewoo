@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class VisitorServiceImpl implements VisitorService {
@@ -52,14 +50,14 @@ public class VisitorServiceImpl implements VisitorService {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
         List<SessionResponse> sessionResponses=visitorMapper.getSessions(id);
-        List<CounselorResponse> counselorResponses=new ArrayList<>();
+        Set<CounselorResponse> counselorResponses=new HashSet<>();
         for (int i=0;i<sessionResponses.size();i++){
             Counselor counselor= visitorMapper.getHistoryCounselor(sessionResponses.get(i).getCounselorId());
             CounselorResponse counselorResponse=new CounselorResponse();
             BeanUtils.copyProperties(counselor,counselorResponse);
             counselorResponses.add(counselorResponse);
         }
-        return counselorResponses;
+        return new ArrayList<>(counselorResponses);
     }
 
     @Override
@@ -89,8 +87,13 @@ public class VisitorServiceImpl implements VisitorService {
         List<SessionResponse> sessionResponses=new ArrayList<>();
         for (int i=0;i<sessions.size();i++){
             SessionResponse sessionResponse=new SessionResponse();
-            BeanUtils.copyProperties(sessions.get(i),sessionResponse);
+            Session session=sessions.get(i);
+            BeanUtils.copyProperties(session,sessionResponse);
+            sessionResponse.setVisitorName(visitorMapper.getInfo(session.getVisitorId()).getName());
+            sessionResponse.setCounselorName(visitorMapper.getHistoryCounselor(session.getCounselorId()).getName());
+            sessionResponse.setProfile(visitorMapper.getHistoryCounselor(session.getCounselorId()).getProfile());
             sessionResponses.add(sessionResponse);
+
         }
 
         return sessionResponses;
