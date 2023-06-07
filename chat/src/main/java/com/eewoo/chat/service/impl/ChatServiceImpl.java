@@ -3,10 +3,12 @@ package com.eewoo.chat.service.impl;
 
 import com.eewoo.chat.service.ChatService;
 import com.eewoo.chat.pojo.Chat;
+import com.eewoo.chat.service.StoreChatService;
 import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
 import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
 import com.eewoo.common.util.R;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -29,36 +31,23 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.websocket.Session;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
 public class ChatServiceImpl implements ChatService {
-    @Autowired
-
-    private MongoTemplate mongoTemplate;
-
-    @Override
-    public Chat findById(Long id) {
-        Query query=new Query();
-        Criteria criteria=Criteria.where("id").is(id);
-        query.addCriteria(criteria);
-        return mongoTemplate.findOne(query,Chat.class);
-    }
-
 
     @Autowired
     PlatformFeign platformFeign;
 
-    static Random random = new Random();
+    @Autowired
+    StoreChatService storeChatService;
+
     String getToken(){
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("token");
     } //获取的header的jwt
 
-    public boolean callCounselor(Integer counselorId){
+    public boolean callCounselor(Integer counselorId, String counselorName){
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer visitorId = user.getId();
         String visitorKey = "v:" + visitorId;
@@ -75,7 +64,7 @@ public class ChatServiceImpl implements ChatService {
         if (waitingVisitors.size() > Constant.MAX_CHAT) //排队人数超标，等待 // TODO 感觉这地方的并发访问一致性控制不够
             return false;
 
-        makeVCSession(visitorKey, counselorKey); //加入会话
+        makeVCSession(visitorKey, user.getName(), counselorKey, counselorName); //加入会话
         return true;
     }
 
@@ -97,6 +86,11 @@ public class ChatServiceImpl implements ChatService {
         //移除chatMap
         WebSocketServer.chatMap.remove(senderKey+"->"+receiverKey);
         WebSocketServer.chatMap.remove(receiverKey+"->"+senderKey);
+
+        //存储进mongo
+        Chat chat = WebSocketServer.sessionChatMap.get(senderChatInfo.getSessionId());
+        storeChatService.save(chat);
+        WebSocketServer.sessionChatMap.remove(senderChatInfo.getSessionId()); //聊天记录从内存删除
 
         //通知两方会话已结束，请进行评价
         WebSocketServer.sendMessage(SR.commentNotify(senderChatToken), WebSocketServer.sessionMap.get(senderKey));
@@ -143,11 +137,12 @@ public class ChatServiceImpl implements ChatService {
         }
         //v:1 将下一个排队成功访客加入进来
         String visitorKey = waitingVisitors.get(Constant.MAX_CHAT);
-        makeVCSession(visitorKey, chatInfo.getSenderKey());
+        makeVCSession(visitorKey, chatInfo.getReceiverName(), chatInfo.getSenderKey(), chatInfo.getSenderName());
     }
 
     @Override
     public boolean callSupervisor(String chatToken) {
+        //TODO 请造假
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer counselorId = user.getId();
         String counselorKey = "c:" + counselorId;
@@ -161,12 +156,12 @@ public class ChatServiceImpl implements ChatService {
 
         Session supervisorSession = WebSocketServer.sessionMap.get(supervisorKey);
         Session counselorSession = WebSocketServer.sessionMap.get(counselorKey);
-        String counselorChatToken = genChatToken(counselorKey, supervisorKey, null);
-        String supervisorChatToken = genChatToken(supervisorKey, counselorKey, null);
-        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, supervisorKey), supervisorSession);
-        WebSocketServer.sendMessage(SR.chatToken(supervisorChatToken, counselorKey), counselorSession);
-        WebSocketServer.chatMap.put(counselorKey + "->" + supervisorKey, counselorChatToken);
-        WebSocketServer.chatMap.put(supervisorKey + "->" + counselorKey, supervisorChatToken);
+//        String counselorChatToken = genChatToken(counselorKey, supervisorKey, null);
+//        String supervisorChatToken = genChatToken(supervisorKey, counselorKey, null);
+//        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, supervisorKey), supervisorSession);
+//        WebSocketServer.sendMessage(SR.chatToken(supervisorChatToken, counselorKey), counselorSession);
+//        WebSocketServer.chatMap.put(counselorKey + "->" + supervisorKey, counselorChatToken);
+//        WebSocketServer.chatMap.put(supervisorKey + "->" + counselorKey, supervisorChatToken);
 
         return true;
     }
@@ -196,9 +191,9 @@ public class ChatServiceImpl implements ChatService {
      * @param sessionId
      * @return 返回chatToken
      */
-    private String genChatToken(String senderKey, String receiverKey, Integer sessionId){
+    private String genChatToken(String senderKey, String senderName, String receiverKey, String receiverName, Integer sessionId){
         String uuid = UUID.randomUUID().toString().replace("-", "");
-        ChatInfo chatInfo = new ChatInfo(true, senderKey, receiverKey, sessionId);
+        ChatInfo chatInfo = new ChatInfo(true, senderKey, senderName, receiverKey, receiverName, sessionId);
         WebSocketServer.tokenInfoMap.put(uuid, chatInfo);
         return uuid;
     }
@@ -208,7 +203,7 @@ public class ChatServiceImpl implements ChatService {
      * @param visitorKey
      * @param counselorKey
      */
-    private void makeVCSession(String visitorKey, String counselorKey){
+    private void makeVCSession(String visitorKey, String visitorName, String counselorKey, String counselorName){
         SessionRequest sessionRequest = new SessionRequest();
         sessionRequest.setCounselorId(Integer.parseInt(counselorKey.substring(2)));
         sessionRequest.setVisitorId(Integer.parseInt(visitorKey.substring(2)));
@@ -216,8 +211,14 @@ public class ChatServiceImpl implements ChatService {
         R r = platformFeign.createSession(sessionRequest, getToken());
         if (r==null) return;
         Integer sessionId = (Integer) r.getData();// 可以正式发起新的会话，得到的sessionId
-        String visitorChatToken = genChatToken(visitorKey, counselorKey, sessionId);
-        String counselorChatToken = genChatToken(counselorKey, visitorKey, sessionId);
+        String visitorChatToken = genChatToken(visitorKey, visitorName, counselorKey, counselorName, sessionId);
+        String counselorChatToken = genChatToken(counselorKey, counselorName, visitorKey, visitorName, sessionId);
+
+        //聊天记录内存暂存
+        Chat chat = new Chat();
+        chat.setId(Long.valueOf(sessionId));
+        chat.setParticipants(Lists.newArrayList(visitorName, counselorName));
+        WebSocketServer.sessionChatMap.put(sessionId, chat);
 
         //通过webSocket将token发给各自，告诉访客和哪个咨询师的chatToken已经有了，告诉咨询师和哪个访客的chatToken已经有了
         WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey), WebSocketServer.sessionMap.get(visitorKey));

@@ -7,9 +7,8 @@ import com.eewoo.chat.pojo.Chat;
 
 
 public interface ChatService {
-    Chat findById(Long id);
 
-    boolean callCounselor(Integer counselorId);
+    boolean callCounselor(Integer counselorId, String counselorName);
 
     void endVCSession(String chatToken);
 
