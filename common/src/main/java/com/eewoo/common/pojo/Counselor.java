@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class Counselor extends User{
-
     Integer age;
     String idCard;
     String phone;

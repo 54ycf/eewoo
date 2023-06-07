@@ -2,6 +2,7 @@ package com.eewoo.platform.service.impl;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.platform.mapper.SupervisorMapper;
+import com.eewoo.platform.pojo.RoughCouselor;
 import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
@@ -50,6 +51,13 @@ public class SupervisorServiceImpl implements SupervisorService {
         PageInfo<BindCounselorResponse> pageInfo = new PageInfo<>(list);
         return pageInfo.getList();
         //达到分页的效果，传递督导的名字不在这里做功能
+    }
+
+    @Override
+    public List<RoughCouselor> getLatelyChatCounselors() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        return mapper.latelyChatCounselors(id);
     }
 
 
