@@ -1,9 +1,9 @@
-package com.eewoo.common.pojo;
+package com.eewoo.platform.pojo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class Session {
@@ -16,7 +16,7 @@ public class Session {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endTime;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date duration;
+    private int duration;
     private String visitorFeedback;
     private int visitorFeedbackScore;
     private String counselorFeedback;

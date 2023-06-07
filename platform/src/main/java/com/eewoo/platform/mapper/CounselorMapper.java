@@ -34,6 +34,8 @@ public interface CounselorMapper {
             "FROM session join user_visitor on session.visitor_id = user_visitor.id WHERE counselor_id = #{id}")
     List<Consult> getAllConsults(@Param("id") Integer counselorId);
 
+    @Update("UPDATE session SET end_time = #{endTime}, duration = (UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time))/60 WHERE id = #{sessionId}")
+    int endSession(Integer sessionId, Date endTime);
 
     @Select("SELECT SUM( duration ) FROM session WHERE counselor_id = #{id}")
     Integer getTotalSessionTime(@Param("id") Integer id);

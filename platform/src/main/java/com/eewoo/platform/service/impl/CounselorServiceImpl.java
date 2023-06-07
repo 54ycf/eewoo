@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.security.Security;
+
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +45,7 @@ public class CounselorServiceImpl implements CounselorService {
     @Override
     public int createEvaluation(Integer sessionID, String feedback, String type) {
           mapper.createEvaluation(sessionID, feedback, type);
+          mapper.endSession(sessionID, new Date());
           return 1;
 
     }

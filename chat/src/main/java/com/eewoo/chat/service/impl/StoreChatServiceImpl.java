@@ -1,7 +1,8 @@
 package com.eewoo.chat.service.impl;
 
+import com.eewoo.chat.pojo.Chat;
 import com.eewoo.chat.service.StoreChatService;
-import com.eewoo.common.pojo.Chat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

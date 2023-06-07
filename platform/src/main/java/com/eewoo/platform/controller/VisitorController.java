@@ -1,12 +1,10 @@
 package com.eewoo.platform.controller;
 
-import com.eewoo.common.pojo.Chat;
-import com.eewoo.common.pojo.Session;
+import com.eewoo.common.pojo.Counselor;
+import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.util.R;
-import com.eewoo.platform.pojo.vo.request.CommentRequest;
-import com.eewoo.platform.pojo.vo.request.SessionRequest;
+import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
-import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
 import com.eewoo.platform.service.VisitorService;
@@ -34,8 +32,8 @@ public class VisitorController {
 
     @GetMapping("/consultants")
     public R getCounselors(){
-        List<CounselorResponse> counselorResponses= visitorService.getCounselors();
-        return R.ok(counselorResponses);
+        List<CounselorResponse> counselors= visitorService.getCounselors();
+        return R.ok(counselors);
     }
 
     @GetMapping("/consultants/history")
@@ -45,15 +43,15 @@ public class VisitorController {
     }
 
     @PostMapping("/comment")
-    public R giveCounselorComment(@RequestBody CommentRequest commentRequest){
-        visitorService.giveCounselorComment(commentRequest.getSessionId(),
-                commentRequest.getVisitorFeedback(),
-                commentRequest.getVisitorFeedbackScore());
+    public R giveCounselorComment(@RequestBody VisitorCommentRequest visitorCommentRequest){
+        visitorService.giveCounselorComment(visitorCommentRequest.getSessionId(),
+                visitorCommentRequest.getVisitorFeedback(),
+                visitorCommentRequest.getVisitorFeedbackScore());
         return R.ok();
     }
 
     @PostMapping("/consult")
-    public R createSession(@RequestBody Session session){
+    public R createSession(@RequestBody SessionRequest session){
         int id=visitorService.createSession(session);
         if(id>0){
             return R.ok(id);

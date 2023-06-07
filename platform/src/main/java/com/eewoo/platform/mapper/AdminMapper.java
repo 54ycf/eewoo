@@ -1,9 +1,13 @@
 package com.eewoo.platform.mapper;
 
-import com.eewoo.common.pojo.Session;
+import com.eewoo.common.pojo.ScheduleCounselor;
+import com.eewoo.common.pojo.ScheduleSupervisor;
+import com.eewoo.common.pojo.Supervisor;
+import com.eewoo.common.pojo.Visitor;
 import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
 import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -43,4 +47,32 @@ public interface AdminMapper {
     @Delete("Delete from user_counselor where id=#{id}")
     int deleteCounselor(Integer id);
 
+    @Select("Select * from user_visitor")
+    List<Visitor> getVisitors();
+
+    //咨询数量排行
+
+    @Select("Select counselor_id,count(*) as num from session group by counselor_id order by num desc limit 4")
+    List<SessionResponse> getTopSessions();
+
+    @Select("Select counselor_id,sum(visitor_feedback_score) as score from session group by counselor_id order by score desc limit 4")
+    List<SessionResponse> getTopScoreCounselors();
+
+    @Select("Select * from schedule_counselor")
+    List<ScheduleCounselor> getCounselorSchedules();
+
+    @Select("Select * from schedule_supervisor")
+    List<ScheduleSupervisor> getSupervisorSchedules();
+
+    @Select("Select * from user_supervisor where id=#{id}")
+    Supervisor getSupervisor(Integer id);
+
+    @Insert("Insert into schedule_counselor(counselor_id,weekday) values (#{counselorId},#{weekday})")
+    int insertScheduleCounselor(int counselorId,int weekday);
+
+    @Delete("delete from schedule_counselor where counselor_id=#{counselorId} and weekday=#{weekday}")
+    int deleteScheduleCounselor(int counselorId,int weekday);
+
+    @Delete("Delete from schedule_supervisor where supervisor_id=#{supervisorId} and weekday=#{weekday}")
+    int deleteScheduleSupervisor(int supervisorId,int weekday);
 }

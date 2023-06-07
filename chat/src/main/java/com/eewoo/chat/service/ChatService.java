@@ -3,7 +3,7 @@ package com.eewoo.chat.service;
 import com.eewoo.chat.pojo.CounselorComment;
 import com.eewoo.chat.pojo.VisitorComment;
 
-import com.eewoo.common.pojo.Chat;
+import com.eewoo.chat.pojo.Chat;
 
 
 public interface ChatService {
