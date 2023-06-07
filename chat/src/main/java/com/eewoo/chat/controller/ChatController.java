@@ -21,8 +21,8 @@ public class ChatController {
      */
     @PreAuthorize("hasAuthority('v')")
     @GetMapping("/call-counselor")
-    public R callCounselor(@RequestParam Integer counselorId){
-        if (chatService.callCounselor(counselorId)) {
+    public R callCounselor(@RequestParam Integer counselorId, @RequestParam String counselorName){
+        if (chatService.callCounselor(counselorId, counselorName)) {
             return R.ok("会话开启成功");
         }
         return R.err("咨询师忙碌，请等待");
