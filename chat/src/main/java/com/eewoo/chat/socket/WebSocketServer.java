@@ -7,7 +7,6 @@ import com.eewoo.chat.pojo.ChatInfo;
 import com.eewoo.chat.pojo.MessageSend;
 import com.eewoo.chat.pojo.SR;
 import com.eewoo.chat.service.ChatScheduler;
-import com.eewoo.chat.service.StoreChatService;
 import com.eewoo.common.pojo.Message;
 import com.eewoo.common.security.LoginUser;
 import org.slf4j.Logger;
@@ -35,10 +34,6 @@ public class WebSocketServer {
     //因为websocket是多实例单线程的，而websocket中的对象在@Autowried时，只有整个项目启动时会注入，而之后新的websocket实例都不会再次注入，故websocket上@Autowried的bean是会为null的
     @Autowired
     public void setAuthFeign(AuthFeign authFeign){WebSocketServer.authFeign = authFeign;}
-
-    static StoreChatService storeService;
-    @Autowired
-    public void setChatService(StoreChatService storeService){WebSocketServer.storeService = storeService;}
 
 
     //记录当前在线连接，key为role:id

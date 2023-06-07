@@ -3,16 +3,22 @@ package com.eewoo.chat.controller;
 import com.eewoo.chat.pojo.CounselorComment;
 import com.eewoo.chat.pojo.VisitorComment;
 import com.eewoo.chat.service.ChatService;
+import com.eewoo.chat.service.FileService;
 import com.eewoo.common.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
     @Autowired
     ChatService chatService;
+    @Autowired
+    FileService fileService;
 
     /**
      * 访客发起会话
@@ -86,6 +92,31 @@ public class ChatController {
     public R endCSSession(@RequestParam String chatToken){
         chatService.endCSSession(chatToken);
         return R.ok();
+    }
+
+    /**
+     * 某个咨询师查看自己当前正在会话数
+     * @return
+     */
+    @GetMapping("current-chats")
+    public R currentChatsNum(){
+        Integer chatsNum = chatService.getChatsNum();
+        return R.ok(chatsNum);
+    }
+
+    /**
+     * 获取在线的咨询师的id 给访客服务调用
+     * @return
+     */
+    @GetMapping("online-counselors")
+    public R getOnlineCounselorIds(){
+        List<Integer> results = chatService.getOnlineCounselors();
+        return R.ok(results);
+    }
+
+    @GetMapping("/file/session")
+    public void getSession(@RequestParam Integer sessionId, HttpServletResponse response) {
+        chatService.getSessionInMongo(sessionId, response);
     }
 
 }

@@ -5,6 +5,9 @@ import com.eewoo.chat.pojo.VisitorComment;
 
 import com.eewoo.chat.pojo.Chat;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
 
 public interface ChatService {
 
@@ -20,4 +23,9 @@ public interface ChatService {
 
     void endCSSession(String chatToken);
 
+    Integer getChatsNum();
+
+    List<Integer> getOnlineCounselors();
+
+    void getSessionInMongo(Integer sessionId, HttpServletResponse response);
 }

@@ -1,6 +1,7 @@
 package com.eewoo.chat.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.eewoo.chat.service.ChatService;
 import com.eewoo.chat.pojo.Chat;
 import com.eewoo.chat.service.StoreChatService;
@@ -9,6 +10,7 @@ import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
 import com.eewoo.common.util.R;
 import com.google.common.collect.Lists;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,7 +32,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.Session;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -181,6 +187,38 @@ public class ChatServiceImpl implements ChatService {
         //移除chatTokenMap
         WebSocketServer.tokenInfoMap.remove(senderKey);
         WebSocketServer.tokenInfoMap.remove(receiverKey);
+    }
+
+    @Override
+    public Integer getChatsNum() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        return WebSocketServer.waitingListMap.get("c:" + user.getId()).size();
+    }
+
+    @Override
+    public List<Integer> getOnlineCounselors() {
+        List<Integer> result = new ArrayList<>();
+        for (String s : WebSocketServer.sessionMap.keySet()) {
+            if (s.startsWith("c:")){
+                String substring = s.substring(2);
+                result.add(Integer.valueOf(substring));
+            }
+        }
+        return result;
+    }
+
+    @SneakyThrows
+    @Override
+    public void getSessionInMongo(Integer sessionId, HttpServletResponse response) {
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("session-"+sessionId+".txt", "UTF-8"));
+        response.setContentType("application/octet-stream");
+        Chat chat = storeChatService.findById(sessionId);
+        byte[] data = JSON.toJSONBytes(chat);
+        ServletOutputStream os;
+        os = response.getOutputStream();
+        os.write(data);
+        os.flush();
+        os.close();
     }
 
 
