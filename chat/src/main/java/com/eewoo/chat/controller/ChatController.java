@@ -119,4 +119,10 @@ public class ChatController {
         chatService.getSessionInMongo(sessionId, response);
     }
 
+    @GetMapping("/file/sessions")
+    public void getSessions(@RequestParam List<Integer> sessionIds, HttpServletResponse response){
+        chatService.getSessionsInMongo(sessionIds, response);
+    }
+
+
 }

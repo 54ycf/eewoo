@@ -6,6 +6,8 @@ import com.eewoo.chat.pojo.VisitorComment;
 import com.eewoo.chat.pojo.Chat;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -28,4 +30,6 @@ public interface ChatService {
     List<Integer> getOnlineCounselors();
 
     void getSessionInMongo(Integer sessionId, HttpServletResponse response);
+
+    void getSessionsInMongo(List<Integer> sessionIds, HttpServletResponse response);
 }
