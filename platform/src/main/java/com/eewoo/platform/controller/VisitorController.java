@@ -21,7 +21,7 @@ public class VisitorController {
     @Autowired
     VisitorService visitorService;
 
-
+    /**获取访客信息**/
     @GetMapping("/info")
     public R getInfo() {
         VisitorResponse info = visitorService.getInfo();
@@ -30,18 +30,21 @@ public class VisitorController {
         return R.ok(info);
     }
 
+    /**获取所有咨询师列表**/
     @GetMapping("/consultants")
     public R getCounselors(){
         List<CounselorResponse> counselors= visitorService.getCounselors();
         return R.ok(counselors);
     }
 
+    /**获取历史咨询师列表**/
     @GetMapping("/consultants/history")
     public R getHistoryCounselors(){
         List<CounselorResponse> counselorResponses= visitorService.getHistoryCounselors();
         return R.ok(counselorResponses);
     }
 
+    /**给咨询师评论**/
     @PostMapping("/comment")
     public R giveCounselorComment(@RequestBody VisitorCommentRequest visitorCommentRequest){
         visitorService.giveCounselorComment(visitorCommentRequest.getSessionId(),
@@ -50,6 +53,7 @@ public class VisitorController {
         return R.ok();
     }
 
+    /**和咨询师创建会话**/
     @PostMapping("/consult")
     public R createSession(@RequestBody SessionRequest session){
         int id=visitorService.createSession(session);
@@ -59,6 +63,7 @@ public class VisitorController {
         return R.err("-1","创建会话失败！");
     }
 
+    /**获取历史咨询记录**/
     @GetMapping("/consults")
     public R getHistorySessions(){
         List<SessionResponse> sessionResponses= visitorService.getHistorySessions();

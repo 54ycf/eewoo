@@ -23,6 +23,7 @@ public class VisitorServiceImpl implements VisitorService {
     @Autowired
     VisitorMapper visitorMapper;
 
+    /**获取访客信息**/
     @Override
     public VisitorResponse getInfo() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
@@ -33,6 +34,7 @@ public class VisitorServiceImpl implements VisitorService {
         return visitorResponse;
     }
 
+    /**获取所有咨询师**/
     @Override
     public List<CounselorResponse> getCounselors() {
         List<Counselor> counselors= visitorMapper.getCounselors();
@@ -45,6 +47,7 @@ public class VisitorServiceImpl implements VisitorService {
         return counselorResponses;
     }
 
+    /**获取历史咨询师**/
     @Override
     public List<CounselorResponse> getHistoryCounselors() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
@@ -60,6 +63,7 @@ public class VisitorServiceImpl implements VisitorService {
         return new ArrayList<>(counselorResponses);
     }
 
+    /**给咨询师评价**/
     @Override
     public void giveCounselorComment(Integer sessionId, String feedback, Integer score) {
         visitorMapper.insertComment(sessionId,feedback,score);
@@ -67,6 +71,7 @@ public class VisitorServiceImpl implements VisitorService {
         return;
     }
 
+    /**创建会话**/
     @Override
     public int createSession(SessionRequest sessionVo) {
         Session session = new Session();
@@ -79,6 +84,7 @@ public class VisitorServiceImpl implements VisitorService {
 
     }
 
+    /**获取历史会话**/
     @Override
     public List<SessionResponse> getHistorySessions() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();

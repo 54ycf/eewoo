@@ -1,7 +1,6 @@
 package com.eewoo.platform.controller;
 
-import com.eewoo.common.pojo.ScheduleCounselor;
-import com.eewoo.common.pojo.Visitor;
+import com.eewoo.platform.pojo.vo.request.BindRequest;
 import com.eewoo.platform.pojo.vo.request.DisableUserRequest;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.feign.AuthFeign;
@@ -14,8 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -45,22 +42,24 @@ public class AdminController {
         return R.ok();
     }
 
-
+    /**获取咨询记录**/
     @GetMapping("/consul_records")
-    public R getSessions(){
-        List<SessionResponse> sessionResponses=adminService.getSessions();
+    public R getSessions(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
+        List<SessionResponse> sessionResponses=adminService.getSessions(page,size);
         return R.ok(sessionResponses);
     }
 
+    /**获取咨询师**/
     @GetMapping("/consultant")
-    public R getCounselors(){
-        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getCounselors();
+    public R getCounselors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
+        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getCounselors(page, size);
         return R.ok(counselorSupervisorResponses);
     }
 
+    /**获取督导**/
     @GetMapping("/supervisor")
-    public R getSupervisors(){
-        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getSupervisors();
+    public R getSupervisors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
+        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getSupervisors(page, size);
         return R.ok(counselorSupervisorResponses);
     }
 
@@ -73,39 +72,44 @@ public class AdminController {
         return R.err("-1","没有找到要删除的数据");
     }
 
+    /**获取访客**/
     @GetMapping("/visitor")
-    public R getVisitors(){
-        List<VisitorResponse> visitorResponses=adminService.getVistors();
+    public R getVisitors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
+        List<VisitorResponse> visitorResponses=adminService.getVistors(page, size);
         return R.ok(visitorResponses);
     }
 
+    /**获取会话数最多的咨询师**/
     @GetMapping("/top_session")
     public R getTopSessionCounselors(){
         List<CounselorResponse> counselorResponses=adminService.getTopSessions();
         return R.ok(counselorResponses);
     }
 
+    /**获取评分最高的咨询师**/
     @GetMapping("/top_score")
     public R getTopScoreCounselors(){
         List<CounselorResponse> counselorResponses= adminService.getTopScoreCounselors();
         return R.ok(counselorResponses);
     }
 
-    @GetMapping("/schedule/counselor")
-    public R getCounselorSchedule() {
+    /**获取咨询师排班表(按星期)**/
+    @GetMapping("/schedule/week/counselor")
+    public R getCounselorScheduleByWeek() {
         List<ScheduleCounselorResponse> scheduleCounselors= adminService.getCounselorSchedules();
         return R.ok(scheduleCounselors);
     }
 
-    @GetMapping("/schedule/supervisor")
-    public R getSupervisorSchedule() {
+    /**获取督导排班表(按星期)**/
+    @GetMapping("/schedule/week/supervisor")
+    public R getSupervisorScheduleByWeek() {
         List<ScheduleSupervisorResponse> scheduleSupervisorResponses= adminService.getSupervisorSchedules();
         return R.ok(scheduleSupervisorResponses);
     }
 
-    //给咨询师排班
-    @PutMapping("/schedule/counselor/add")
-    public R putCounselorSchedule(@RequestBody ScheduleCounselorRequest scheduleCounselorRequest){
+    /**添加咨询师排班(按星期)**/
+    @PutMapping("/schedule/week/counselor/add")
+    public R putCounselorScheduleByWeek(@RequestBody ScheduleCounselorRequest scheduleCounselorRequest){
         int ok=adminService.putCounselorSchedule(scheduleCounselorRequest);
         if(ok>0) {
             return R.ok("排班成功！");
@@ -113,8 +117,9 @@ public class AdminController {
         return R.err("-1","排班失败！");
     }
 
-    @PutMapping("/schedule/counselor/delete")
-    public R removeCounselorSchedule(@RequestBody ScheduleCounselorRequest scheduleCounselorRequest){
+    /**删除咨询师排班(按星期)**/
+    @PutMapping("/schedule/week/counselor/delete")
+    public R removeCounselorScheduleByWeek(@RequestBody ScheduleCounselorRequest scheduleCounselorRequest){
         int ok=adminService.removeCounselorSchedule(scheduleCounselorRequest);
         if(ok>0){
             return R.ok("移除成功！");
@@ -122,14 +127,68 @@ public class AdminController {
         return R.err("-1","移除失败！");
     }
 
-    @PutMapping("/schedule/supervisor/delete")
-    public R removeCounselorSchedule(@RequestBody ScheduleSupervisorRequest scheduleSupervisorRequest){
+    /**删除督导排班(按星期)**/
+    @PutMapping("/schedule/week/supervisor/delete")
+    public R removeCounselorScheduleByWeek(@RequestBody ScheduleSupervisorRequest scheduleSupervisorRequest){
         int ok=adminService.removeSupervisorSchedule(scheduleSupervisorRequest);
         if(ok>0){
             return R.ok("移除成功！");
         }
         return R.err("-1","移除失败！");
     }
+
+    /**获取咨询师的排班(按日期)**/
+    @GetMapping("/schedule/day/counselor")
+    public R getCounselorScheduleByDay(){
+        List<DayScheduleCounselorResponse> dayScheduleCounselorRespons = adminService.getCounselorSchedulesByDay();
+        return R.ok(dayScheduleCounselorRespons);
+    }
+
+    /**获取督导的排班(按日期)**/
+    @GetMapping("/schedule/day/supervisor")
+    public R getSupervisorScheduleByDay(){
+        List<DayScheduleSupervisorResponse> dayScheduleSupervisorResponses= adminService.getSupervisorSchedulesByDay();
+        return R.ok(dayScheduleSupervisorResponses);
+    }
+
+    /**添加咨询师排班(按日期)**/
+    @GetMapping("/schedule/day/counselor/add")
+    public R putCounselorScheduleByDay(){
+        return R.ok();
+    }
+
+    /**查看某一个具体的咨询师**/
+    @GetMapping("/admin/week/consultant/detail")
+    public R getCounselorDetail(@RequestParam(name = "counselorId", required = true) Integer counselorId ){
+        CounselorResponse counselorResponse=adminService.getCounselorById(counselorId);
+        return R.ok(counselorResponse);
+    }
+
+    @GetMapping("/admin/consultant/search")
+    public R getCounselorByName(@RequestParam(name = "name",required = false,defaultValue = "")String name){
+        List<CounselorResponse> counselorResponses=null;
+        if(name.length()<1){
+            counselorResponses= adminService.getCounselorsWithoutSupervi(1,20);
+            return R.ok(counselorResponses);
+        }
+        counselorResponses= adminService.getCounselorByName(name);
+        return R.ok(counselorResponses);
+    }
+
+    /**修改咨询师和督导的绑定关系**/
+    @PutMapping("/admin/consultant/bind")
+    public R reviseBind(@RequestBody BindRequest bindRequest){
+        int ok=adminService.reviseBind(bindRequest);
+        if(ok>0){
+            R.ok("绑定成功！");
+        }
+        return R.err("-1","绑定失败！");
+    }
+
+
+
+
+
 
 
 

@@ -1,7 +1,7 @@
 package com.eewoo.platform.mapper;
 
 import com.eewoo.common.pojo.Counselor;
-import com.eewoo.common.pojo.Session;
+//import com.eewoo.common.pojo.Session;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import org.apache.ibatis.annotations.*;
@@ -52,7 +52,7 @@ public interface CounselorMapper {
             " FROM user_counselor WHERE counselor_id = #{id}")
     Counselor getmassiveInfo(@Param("id")Integer id);
 
-    @Select("SELECT * FROM session WHERE counselor_id = #{id} and id = #{item}")
-    Session getSessionIfOk(Integer id, Integer item);
-    //检查每一个输入的ID是否是本咨询师拥有的会话记录。
+//    @Select("SELECT * FROM session WHERE counselor_id = #{id} and id = #{item}")
+//    Session getSessionIfOk(Integer id, Integer item);
+//    //检查每一个输入的ID是否是本咨询师拥有的会话记录。
 }
