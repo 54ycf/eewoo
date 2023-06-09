@@ -1,5 +1,6 @@
 package com.eewoo.chat.controller;
 
+import com.eewoo.chat.pojo.Chat;
 import com.eewoo.chat.pojo.CounselorComment;
 import com.eewoo.chat.pojo.VisitorComment;
 import com.eewoo.chat.service.ChatService;
@@ -98,6 +99,7 @@ public class ChatController {
      * 某个咨询师查看自己当前正在会话数
      * @return
      */
+    @PreAuthorize("hasAuthority('c')")
     @GetMapping("current-chats")
     public R currentChatsNum(){
         Integer chatsNum = chatService.getChatsNum();
@@ -122,6 +124,18 @@ public class ChatController {
     @GetMapping("/file/sessions")
     public void getSessions(@RequestParam List<Integer> sessionIds, HttpServletResponse response){
         chatService.getSessionsInMongo(sessionIds, response);
+    }
+
+
+    /**
+     * 获取某一次的聊天
+     * @param sessionId
+     * @return
+     */
+    @GetMapping("/session-content")
+    public R getSessionContent(@RequestParam Integer sessionId){
+        Chat chat = chatService.getSessionContent(sessionId);
+        return R.ok(chat);
     }
 
 
