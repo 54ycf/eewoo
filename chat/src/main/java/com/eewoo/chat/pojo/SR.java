@@ -47,12 +47,13 @@ public class SR {
         return response;
     }
 
-    public static SR chatToken(String chatToken, String toUserKey/*v:1*/){
+    public static SR chatToken(String chatToken, String toUserKey/*v:1*/, String toUsername){
         SR response = new SR();
         response.setType("chatToken");
         Map<String, String> map = new HashMap<>();
         map.put("chatToken", chatToken);
         map.put("toUserKey", toUserKey);
+        map.put("toUserName", toUsername);
         response.setData(map);
         return response;
     }

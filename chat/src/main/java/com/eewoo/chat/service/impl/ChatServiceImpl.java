@@ -2,6 +2,7 @@ package com.eewoo.chat.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.eewoo.chat.service.ChatService;
 import com.eewoo.chat.pojo.Chat;
 import com.eewoo.chat.service.StoreChatService;
@@ -10,6 +11,8 @@ import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
 import com.eewoo.common.util.R;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -35,9 +38,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.Session;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 @Service
@@ -192,7 +201,9 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Integer getChatsNum() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        return WebSocketServer.waitingListMap.get("c:" + user.getId()).size();
+        List<String> waitingVisitors = WebSocketServer.waitingListMap.get("c:" + user.getId());
+        if (waitingVisitors == null) return 0;
+        return waitingVisitors.size();
     }
 
     @Override
@@ -213,12 +224,38 @@ public class ChatServiceImpl implements ChatService {
         response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("session-"+sessionId+".txt", "UTF-8"));
         response.setContentType("application/octet-stream");
         Chat chat = storeChatService.findById(sessionId);
-        byte[] data = JSON.toJSONBytes(chat);
+        byte[] data = JSON.toJSONBytes(chat, SerializerFeature.PrettyFormat);
         ServletOutputStream os;
         os = response.getOutputStream();
         os.write(data);
         os.flush();
         os.close();
+    }
+
+    @SneakyThrows
+    @Override
+    public void getSessionsInMongo(List<Integer> sessionIds, HttpServletResponse response) {
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("sessions.zip", "UTF-8"));
+        response.setContentType("application/octet-stream");
+
+        List<ZipItem> zipItems = new ArrayList<>();
+        for (Integer sessionId : sessionIds) {
+            Chat chat = storeChatService.findById(1);
+            byte[] data = JSON.toJSONBytes(chat, SerializerFeature.PrettyFormat);
+            zipItems.add(new ZipItem(data, sessionId));
+        }
+        byte[] zipData = zip(zipItems);
+
+        ServletOutputStream os;
+        os = response.getOutputStream();
+        os.write(zipData);
+        os.flush();
+        os.close();
+    }
+
+    @Override
+    public Chat getSessionContent(Integer sessionId) {
+        return storeChatService.findById(sessionId);
     }
 
 
@@ -259,8 +296,8 @@ public class ChatServiceImpl implements ChatService {
         WebSocketServer.sessionChatMap.put(sessionId, chat);
 
         //通过webSocket将token发给各自，告诉访客和哪个咨询师的chatToken已经有了，告诉咨询师和哪个访客的chatToken已经有了
-        WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey), WebSocketServer.sessionMap.get(visitorKey));
-        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, visitorKey), WebSocketServer.sessionMap.get(counselorKey));
+        WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey, counselorName), WebSocketServer.sessionMap.get(visitorKey));
+        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, visitorKey, visitorName), WebSocketServer.sessionMap.get(counselorKey));
         //二者之间建立会话
         WebSocketServer.chatMap.put(visitorKey+"->"+counselorKey, visitorChatToken);
         WebSocketServer.chatMap.put(counselorKey+"->"+visitorKey, counselorChatToken);
@@ -271,4 +308,35 @@ public class ChatServiceImpl implements ChatService {
     }
 
 
+    /**
+     * 压缩多个txt
+     * @param zipItems
+     * @return
+     */
+    @SneakyThrows
+    private byte[] zip(List<ZipItem> zipItems){
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zipOut = new ZipOutputStream(baos)) {
+            for (ZipItem zipItem : zipItems) {
+                byte[] txtFileBytes = zipItem.getTxtFileBytes();
+                ZipEntry entry1 = new ZipEntry("session-"+zipItem.getSessionId()+".txt");
+                zipOut.putNextEntry(entry1);
+                zipOut.write(txtFileBytes);
+                zipOut.closeEntry();
+            }
+            zipOut.finish();
+            zipOut.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @Data
+    @AllArgsConstructor
+    static
+    class ZipItem{
+        byte[] txtFileBytes;
+        Integer sessionId;
+    }
 }

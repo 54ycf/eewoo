@@ -13,9 +13,12 @@ import java.util.List;
 public interface AdminService {
 
     int disableUser(Integer id, String role);
+    int enableUser(Integer id, String role);
+
 
     /**获取咨询记录**/
     List<SessionResponse> getSessions(Integer page,Integer pageSize);
+
 
     /**获取咨询师**/
     List<CounselorSupervisorResponse> getCounselors(Integer page,Integer pageSize);

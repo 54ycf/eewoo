@@ -42,7 +42,12 @@ public class AdminController {
         return R.ok();
     }
 
-    /**获取咨询记录**/
+    @PutMapping("/enable")
+    public R enableUser(@RequestBody DisableUserRequest enableUser){
+        adminService.enableUser(enableUser.getId(), enableUser.getRole());
+        return R.ok();
+    }
+
     @GetMapping("/consul_records")
     public R getSessions(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
         List<SessionResponse> sessionResponses=adminService.getSessions(page,size);

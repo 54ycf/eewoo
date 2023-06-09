@@ -41,17 +41,25 @@ public class AdminServiceImpl implements AdminService {
     public int disableUser(Integer id, String role) {
         return userMapper.disableUser(id, Constant.roleTableMap.get(role));
     }
+    @Override
+    public int enableUser(Integer id, String role) {
+        return userMapper.enableUser(id, Constant.roleTableMap.get(role));
+    }
 
     /**
      * 获取咨询记录
      * **/
     @Override
     public List<SessionResponse> getSessions(Integer page,Integer pageSize) {
-        PageHelper.startPage(page,pageSize);
-        List<SessionResponse> sessionResponses= adminMapper.getSessions();
-        PageInfo<SessionResponse> pageInfo=new PageInfo<>(sessionResponses);
+        PageHelper.startPage(page, pageSize);
+        List<SessionResponse> sessionResponses = adminMapper.getSessions();
+        PageInfo<SessionResponse> pageInfo = new PageInfo<>(sessionResponses);
         return pageInfo.getList();
     }
+
+
+
+
 
     /**
      * 获取咨询师列表(含绑定的督导)

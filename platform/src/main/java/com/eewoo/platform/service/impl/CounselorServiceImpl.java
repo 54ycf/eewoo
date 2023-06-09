@@ -88,11 +88,4 @@ public class CounselorServiceImpl implements CounselorService {
         Integer id = user.getId();
         return mapper.getmassiveInfo(id);
     }
-
-//    @Override
-//    public Session fetchSessionIfAuthenticated(Integer item) {
-//        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-//        Integer id = user.getId();
-//        return mapper.getSessionIfOk(id,item);
-//    }
 }
