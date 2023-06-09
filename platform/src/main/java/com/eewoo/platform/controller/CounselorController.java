@@ -2,7 +2,7 @@ package com.eewoo.platform.controller;
 
 import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
 import com.eewoo.common.pojo.Counselor;
-import com.eewoo.common.pojo.Session;
+//import com.eewoo.common.pojo.Session;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.vo.request.c_Evaluation;
@@ -137,66 +137,64 @@ public class CounselorController {
      *既然是给咨询师使用的功能，还要判断ID是否都是来自属于本咨询师的会话账号的。
      * 应该还需要chat那边给具体的聊天记录，毕竟我这边只有对话的小记录
      */
-    @PostMapping("/export-consults")
-    public R exportChat(@RequestParam("exportIDs[]") List<Integer> exportIDs) throws IOException {
-        List<Session> sessions = new ArrayList<>();
-        Integer cnt = exportIDs.size();
-        //维护一个指针，看看是不是全部不是本咨询师的会话记录。
-        for(Integer item : exportIDs)//需要判断前端来的ID是不是真的是本咨询师的会话记录。一个一个查验，最后再合并，看会不会null
-        {
-            Session session  = counselorService.fetchSessionIfAuthenticated(item);
-            if(session != null)
-            {
-                sessions.add(session);
-                cnt--;
-            }
-            else
-                continue;
-        }
-        if(cnt != 0)
-            return R.err("400","输入了非法的会话ID");
-        //如何提供下载功能？
-        //先进行对象的序列化
-        try
-        {
-            String filePath ="src/main/resources/zipFile/file.txt";
-            //记得把文件保存在整个项目相对位置
-            ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(filePath)));
-            Session[] obj = new Session[sessions.size()];
-            sessions.toArray(obj);
-            oos.writeObject(obj);
-            //进行文件的压缩
-
-            String filePath2 = "src/main/resources/zipFile/file.txt";
-            FileOutputStream out = new FileOutputStream(new File(filePath2));
-            ZipUtils.toZip(filePath, out,true);
-            out.close();
-
-            //进行资源的打包。
-            try
-            {
-                Resource resource  = (Resource) new UrlResource(filePath2);
-                if(resource != null)
-                    return R.ok(resource);
-                //真正的返回下载文件在这里
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        //在找到文件路径，下载
-
-        return R.ok(sessions);
-        //实在没有办法就在这里返回，反正也返回了。
-    }
+//    @PostMapping("/export-consults")
+//    public R exportChat(@RequestParam("exportIDs[]") List<Integer> exportIDs) throws IOException {
+//        List<Session> sessions = new ArrayList<>();
+//        Integer cnt = exportIDs.size();
+//        //维护一个指针，看看是不是全部不是本咨询师的会话记录。
+//        for(Integer item : exportIDs)//需要判断前端来的ID是不是真的是本咨询师的会话记录。一个一个查验，最后再合并，看会不会null
+//        {
+//            Session session  = counselorService.fetchSessionIfAuthenticated(item);
+//            if(session != null)
+//            {
+//                sessions.add(session);
+//                cnt--;
+//            }
+//            else
+//                continue;
+//        }
+//        if(cnt != 0)
+//            return R.err("400","输入了非法的会话ID");
+//        //如何提供下载功能？
+//        //先进行对象的序列化
+//        try
+//        {
+//            String filePath ="src/main/resources/zipFile/file.txt";
+//            //记得把文件保存在整个项目相对位置
+//            ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(filePath)));
+//            Session[] obj = new Session[sessions.size()];
+//            sessions.toArray(obj);
+//            oos.writeObject(obj);
+//            //进行文件的压缩
+//
+//            String filePath2 = "src/main/resources/zipFile/file.txt";
+//            FileOutputStream out = new FileOutputStream(new File(filePath2));
+//            ZipUtils.toZip(filePath, out,true);
+//            out.close();
+//
+//            //进行资源的打包。
+//            try
+//            {
+//                Resource resource  = (Resource) new UrlResource(filePath2);
+//                if(resource != null)
+//                    return R.ok(resource);
+//                //真正的返回下载文件在这里
+//            }
+//            catch (Exception e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
+//        catch(IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        //在找到文件路径，下载
+//
+//        return R.ok(sessions);
+//        //实在没有办法就在这里返回，反正也返回了。
+//    }
 
 
 

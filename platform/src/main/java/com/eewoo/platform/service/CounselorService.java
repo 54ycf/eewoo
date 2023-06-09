@@ -1,7 +1,7 @@
 package com.eewoo.platform.service;
 
 import com.eewoo.common.pojo.Counselor;
-import com.eewoo.common.pojo.Session;
+//import com.eewoo.common.pojo.Session;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import com.eewoo.platform.pojo.vo.response.SupervisorResponse;
 
@@ -23,5 +23,5 @@ public interface CounselorService {
 
     Counselor getAllInfoExceptPassword();
 
-    Session fetchSessionIfAuthenticated(Integer item);
+//    Session fetchSessionIfAuthenticated(Integer item);
 }

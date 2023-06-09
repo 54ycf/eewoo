@@ -33,7 +33,7 @@ public interface SupervisorMapper {
     @Select("SELECT name,counselor.id counselor.profile FROM banned join user_supervisor join user_counselor WHERE supervisor.id = #{id}")
     List<RoughCouselor> latelyChatCounselors(Integer id);
 
-    @Select("SELECT  id,username,password,banned,name,profile,consult_duration_total,consult_cnt_today, consult_duration_today, age, id_card, phone, email, work_place" +
+    @Select("SELECT  id,username,banned,name,profile,consult_duration_total,consult_cnt_today, consult_duration_today, age, id_card, phone, email, work_place" +
             ",title,qualification,qualification_number " +
             " FROM user_supervisor WHERE id = #{id}")
     Supervisor getSupervisorInfo(Integer id);
