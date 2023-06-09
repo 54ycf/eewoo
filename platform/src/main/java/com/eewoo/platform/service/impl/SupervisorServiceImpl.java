@@ -1,8 +1,11 @@
 package com.eewoo.platform.service.impl;
+import com.eewoo.common.pojo.Counselor;
+import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.platform.mapper.SupervisorMapper;
 import com.eewoo.platform.pojo.RoughCouselor;
+import com.eewoo.platform.pojo.vo.request.FindCounselorMsg;
 import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.CounselorResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
@@ -58,6 +61,27 @@ public class SupervisorServiceImpl implements SupervisorService {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
         return mapper.latelyChatCounselors(id);
+    }
+
+    @Override
+    public Supervisor getSupervisorInfo() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+
+        return mapper.getSupervisorInfo(id);
+    }
+
+    @Override
+    public List<Counselor> findCounselors(FindCounselorMsg fcm) {
+
+        if(fcm.getIdCard() != null)
+            return mapper.getCounselorById(Integer.parseInt(fcm.getIdCard()));
+        if(fcm.getUsername() != null)
+            return mapper.getConsounselorsByUsername(fcm.getUsername());
+        if(fcm.getName() != null)
+            return mapper.getConsounselorsByName(fcm.getName());
+
+        return null;
     }
 
 
