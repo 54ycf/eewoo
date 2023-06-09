@@ -1,7 +1,6 @@
 package com.eewoo.platform.service;
 
 import com.eewoo.common.pojo.Counselor;
-import com.eewoo.common.pojo.Session;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import com.eewoo.platform.pojo.vo.response.SupervisorResponse;
 
@@ -22,6 +21,4 @@ public interface CounselorService {
     Integer getTodaySessionTime();//获取今天总的咨询时长
 
     Counselor getAllInfoExceptPassword();
-
-    Session fetchSessionIfAuthenticated(Integer item);
 }

@@ -201,7 +201,9 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Integer getChatsNum() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        return WebSocketServer.waitingListMap.get("c:" + user.getId()).size();
+        List<String> waitingVisitors = WebSocketServer.waitingListMap.get("c:" + user.getId());
+        if (waitingVisitors == null) return 0;
+        return waitingVisitors.size();
     }
 
     @Override
@@ -249,6 +251,11 @@ public class ChatServiceImpl implements ChatService {
         os.write(zipData);
         os.flush();
         os.close();
+    }
+
+    @Override
+    public Chat getSessionContent(Integer sessionId) {
+        return storeChatService.findById(sessionId);
     }
 
 

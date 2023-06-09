@@ -32,4 +32,6 @@ public interface ChatService {
     void getSessionInMongo(Integer sessionId, HttpServletResponse response);
 
     void getSessionsInMongo(List<Integer> sessionIds, HttpServletResponse response);
+
+    Chat getSessionContent(Integer sessionId);
 }
