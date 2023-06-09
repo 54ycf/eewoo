@@ -13,6 +13,8 @@ public interface AdminService {
 
     int disableUser(Integer id, String role);
 
+    int enableUser(Integer id, String role);
+
     List<SessionResponse> getSessions();
 
     List<CounselorSupervisorResponse> getCounselors();

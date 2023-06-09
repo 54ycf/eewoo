@@ -36,6 +36,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public int enableUser(Integer id, String role) {
+        return userMapper.enableUser(id, Constant.roleTableMap.get(role));
+    }
+
+    @Override
     public List<SessionResponse> getSessions() {
         List<SessionResponse> sessionResponses= adminMapper.getSessions();
         return sessionResponses;

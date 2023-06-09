@@ -45,6 +45,12 @@ public class AdminController {
         return R.ok();
     }
 
+    @PutMapping("/enable")
+    public R enableUser(@RequestBody DisableUserRequest enableUser){
+        adminService.enableUser(enableUser.getId(), enableUser.getRole());
+        return R.ok();
+    }
+
 
     @GetMapping("/consul_records")
     public R getSessions(){

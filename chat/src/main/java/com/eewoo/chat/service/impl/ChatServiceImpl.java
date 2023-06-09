@@ -296,8 +296,8 @@ public class ChatServiceImpl implements ChatService {
         WebSocketServer.sessionChatMap.put(sessionId, chat);
 
         //通过webSocket将token发给各自，告诉访客和哪个咨询师的chatToken已经有了，告诉咨询师和哪个访客的chatToken已经有了
-        WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey), WebSocketServer.sessionMap.get(visitorKey));
-        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, visitorKey), WebSocketServer.sessionMap.get(counselorKey));
+        WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey, counselorName), WebSocketServer.sessionMap.get(visitorKey));
+        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, visitorKey, visitorName), WebSocketServer.sessionMap.get(counselorKey));
         //二者之间建立会话
         WebSocketServer.chatMap.put(visitorKey+"->"+counselorKey, visitorChatToken);
         WebSocketServer.chatMap.put(counselorKey+"->"+visitorKey, counselorChatToken);

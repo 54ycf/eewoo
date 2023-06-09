@@ -14,4 +14,6 @@ public interface UserMapper{
     @Update("UPDATE ${table} SET banned = 1 WHERE id = #{id}")
     int disableUser(@Param("id") Integer id, @Param("table") String table);
 
+    @Update("UPDATE ${table} SET banned = 0 WHERE id = #{id}")
+    int enableUser(@Param("id") Integer id, @Param("table") String s);
 }
