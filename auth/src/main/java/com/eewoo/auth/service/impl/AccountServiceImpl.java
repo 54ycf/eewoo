@@ -79,7 +79,9 @@ public class AccountServiceImpl implements AccountService {
             return -1;
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         counselor.setPassword(encoder.encode(counselor.getPassword()));
-        return userMapper.addCounselor(counselor);
+        userMapper.addCounselor(counselor);
+        userMapper.addBindingRelationship(counselor);
+        return 1;
     }
 
     @Override
@@ -89,6 +91,22 @@ public class AccountServiceImpl implements AccountService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         supervisor.setPassword(encoder.encode(supervisor.getPassword()));
         return userMapper.addSupervisor(supervisor);
+    }
+
+    @Override
+    public int updateCounselor(Counselor counselor) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        counselor.setPassword(encoder.encode(counselor.getPassword()));
+        userMapper.updateCounselor(counselor);
+        return 0;
+    }
+
+    @Override
+    public int updateSupervisor(Supervisor supervisor) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        supervisor.setPassword(encoder.encode(supervisor.getPassword()));
+        userMapper.updateSupervisor(supervisor);
+        return 0;
     }
 
 }

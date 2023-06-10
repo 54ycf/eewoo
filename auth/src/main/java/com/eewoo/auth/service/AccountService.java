@@ -10,4 +10,7 @@ public interface AccountService {
     int registerVisitor(Visitor visitor);
     int addCounselor(Counselor counselor);
     int addSupervisor(Supervisor supervisor);
+
+    int updateCounselor(Counselor counselor);
+    int updateSupervisor(Supervisor supervisor);
 }
