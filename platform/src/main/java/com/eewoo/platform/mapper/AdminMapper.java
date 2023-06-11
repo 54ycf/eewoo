@@ -76,6 +76,7 @@ public interface AdminMapper {
     @Select("Select * from day_schedule_counselor")
     List<DayScheduleCounselorResponse> getCounselorSchedulesByDay();
 
+    @Select("Select * from day_schedule_supervisor")
     List<DayScheduleSupervisorResponse> getSupervisorSchedulesByDay();
 
     @Select("Select * from schedule_counselor where counselor_id=#{counselorId} and weekday=#{weekday}")
@@ -84,12 +85,56 @@ public interface AdminMapper {
     @Select("Select * from schedule_supervisor where supervisor_id=#{supervisorId} and weekday=#{weekday}")
     ScheduleSupervisorResponse getScheduleSupervisor(int supervisorId,int weekday);
 
-    @Select("Select * from day_schedule_counselor where counselor_id=#{counselorId} and date=#{date}")
-    DayScheduleCounselorResponse getScheduleCounselorByDay(int counselorId, Date date);
+    @Select("Select * from day_schedule_counselor where counselor_id=#{counselorId} and day=#{day}")
+    DayScheduleCounselorResponse getScheduleCounselorByDay(int counselorId, Date day);
 
-    @Update("update day_schedule_counselor set banned=0 where counselor_id=#{counselorId} and date=#{date}")
-    int updateScheduleCounselorByDay(int counselorId,Date date);
+    @Update("update day_schedule_counselor set banned=0 where counselor_id=#{counselorId} and day=#{day}")
+    int updateScheduleCounselorByDay(int counselorId,Date day);
 
-  //  int insertScheduleCounselorByDay
+    @Update("update day_schedule_counselor set banned=1 where counselor_id=#{counselorId} and day=#{day}")
+    int deleteScheduleCounselorByDay(int counselorId,Date day);
+
+    @Insert("Insert into day_schedule_counselor (counselor_id,day,banned) values (#{counselorId},#{day},0)")
+    int insertScheduleCounselorByDay(int counselorId,Date day);
+
+    @Select("Select * from day_schedule_counselor where counselor_id=#{counselorId} and day=#{day}")
+    DayScheduleCounselorResponse selectDayScheduleCounselor(int counselorId,Date day);
+
+    @Select("Select * from day_schedule_supervisor where supervisor_id=#{supervisorId} and day=#{day}")
+    DayScheduleSupervisorResponse selectDayScheduleSupervisor(int supervisorId,Date day);
+
+    @Insert("Insert into day_schedule_supervisor (supervisor_id,day,banned) values (#{supervisorId},#{day},0)")
+    int insertScheduleSupervisorByDay(int supervisorId,Date day);
+
+    @Update("update day_schedule_supervisor set banned=0 where supervisor_id=#{supervisorId} and day=#{day}")
+    int updateScheduleSupervisorByDay(int supervisorId,Date day);
+
+    @Update("update day_schedule_supervisor set banned=1 where supervisor_id=#{supervisorId} and day=#{day}")
+    int deleteScheduleSupervisorByDay(int supervisorId,Date day);
+
+    /**根据bind获取督导的id**/
+    @Select("Select supervisor_id from binding where counselor_id=#{counselorId}")
+    Integer selectSuperviIdByBind(Integer counselorId);
+
+    /**根据id获取咨询师**/
+    @Select("Select name from user_supervisor where id=#{supervisor_id}")
+    String selectSuperviNameById(Integer supervisorId);
+
+    /**获取某个咨询师的咨询师总数**/
+    @Select("Select count(*) from session where counselor_id=#{counselorId}")
+    Integer selectSessionCountById(Integer counselorId);
+
+    /**获取咨询师咨询的总时长**/
+    @Select("Select count(duration) from session where counselor_id=#{counselorId}")
+    Integer selectSessionTimeById(Integer counselorId);
+
+    /**获取某个咨询师的平均得分**/
+    @Select("Select avg(visitor_feedback_score) from session where counselor_id=#{counselorId}")
+    Double countAvgSessionScoreById(Integer counselorId);
+
+    /**获取某个咨询师的值班安排**/
+    @Select("Select weekday from schedule_counselor where counselor_id=#{counselorId}")
+    List<Integer> getCounselorScheduleById(Integer counselorId);
+
 
 }

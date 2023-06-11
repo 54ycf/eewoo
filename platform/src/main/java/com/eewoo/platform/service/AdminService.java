@@ -1,10 +1,7 @@
 package com.eewoo.platform.service;
 
 
-import com.eewoo.platform.pojo.vo.request.BindRequest;
-import com.eewoo.platform.pojo.vo.request.DayScheduleCounselorRequest;
-import com.eewoo.platform.pojo.vo.request.ScheduleCounselorRequest;
-import com.eewoo.platform.pojo.vo.request.ScheduleSupervisorRequest;
+import com.eewoo.platform.pojo.vo.request.*;
 import com.eewoo.platform.pojo.vo.response.*;
 
 
@@ -62,16 +59,23 @@ public interface AdminService {
     /**添加咨询师排班(按日期)**/
     int putCounselorScheduleByDay(DayScheduleCounselorRequest dayScheduleCounselorRequest);
 
+    /**移除咨询师排班(按日期)**/
+    int deleteCounselorScheduleByDay(DayScheduleCounselorRequest dayScheduleCounselorRequest);
 
+    /**添加督导排班(按日期)**/
+    int putSupervisorScheduleByDay(DayScheduleSupervisorRequest dayScheduleSupervisorRequest);
+
+    /**移除督导排班(按日期)**/
+    int deleteSupervisorScheduleByDay(DayScheduleSupervisorRequest dayScheduleSupervisorRequest);
 
     /**获取某个咨询师的详细信息**/
     CounselorResponse getCounselorById(Integer counselorId);
 
     /**获取所有咨询师，不看督导系列**/
-    List<CounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize);
+    List<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize);
 
     /**根据姓名获取咨询师**/
-    List<CounselorResponse> getCounselorByName(String name);
+    List<AdminCounselorResponse> getCounselorByName(String name);
 
     /**修改咨询师和督导的绑定关系**/
     int reviseBind(BindRequest bindRequest);

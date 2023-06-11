@@ -8,10 +8,7 @@ import com.eewoo.common.util.Constant;
 import com.eewoo.platform.mapper.AdminMapper;
 import com.eewoo.platform.mapper.UserMapper;
 import com.eewoo.platform.mapper.VisitorMapper;
-import com.eewoo.platform.pojo.vo.request.BindRequest;
-import com.eewoo.platform.pojo.vo.request.DayScheduleCounselorRequest;
-import com.eewoo.platform.pojo.vo.request.ScheduleCounselorRequest;
-import com.eewoo.platform.pojo.vo.request.ScheduleSupervisorRequest;
+import com.eewoo.platform.pojo.vo.request.*;
 import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.service.AdminService;
 import com.github.pagehelper.PageHelper;
@@ -206,8 +203,68 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public int putCounselorScheduleByDay(DayScheduleCounselorRequest dayScheduleCounselorRequest) {
-        return 1;
+        DayScheduleCounselorResponse dayScheduleCounselorResponse= adminMapper.selectDayScheduleCounselor(
+                dayScheduleCounselorRequest.getCounselorId(),
+                dayScheduleCounselorRequest.getDay()
+        );
+        if(dayScheduleCounselorResponse==null){
+            return adminMapper.insertScheduleCounselorByDay(dayScheduleCounselorRequest.getCounselorId(),
+                    dayScheduleCounselorRequest.getDay());
+        }
+        return adminMapper.updateScheduleCounselorByDay(
+                dayScheduleCounselorRequest.getCounselorId(),
+                dayScheduleCounselorRequest.getDay()
+        );
     }
+
+    @Override
+    public int deleteCounselorScheduleByDay(DayScheduleCounselorRequest dayScheduleCounselorRequest) {
+        DayScheduleCounselorResponse dayScheduleCounselorResponse=adminMapper.selectDayScheduleCounselor(
+                dayScheduleCounselorRequest.getCounselorId(),
+                dayScheduleCounselorRequest.getDay()
+        );
+        if(dayScheduleCounselorResponse==null){
+            return -1;
+        }
+        return adminMapper.deleteScheduleCounselorByDay(
+                dayScheduleCounselorRequest.getCounselorId(),
+                dayScheduleCounselorRequest.getDay()
+        );
+    }
+
+    @Override
+    public int putSupervisorScheduleByDay(DayScheduleSupervisorRequest dayScheduleSupervisorRequest) {
+        DayScheduleSupervisorResponse dayScheduleSupervisorResponse= adminMapper.selectDayScheduleSupervisor(
+                dayScheduleSupervisorRequest.getSupervisorId(),
+                dayScheduleSupervisorRequest.getDay()
+        );
+        if(dayScheduleSupervisorResponse==null){
+            return adminMapper.insertScheduleSupervisorByDay(
+                    dayScheduleSupervisorRequest.getSupervisorId(),
+                    dayScheduleSupervisorRequest.getDay()
+            );
+        }
+        return adminMapper.updateScheduleSupervisorByDay(
+                dayScheduleSupervisorRequest.getSupervisorId(),
+                dayScheduleSupervisorRequest.getDay()
+        );
+    }
+
+    @Override
+    public int deleteSupervisorScheduleByDay(DayScheduleSupervisorRequest dayScheduleSupervisorRequest) {
+        DayScheduleSupervisorResponse dayScheduleSupervisorResponse= adminMapper.selectDayScheduleSupervisor(
+                dayScheduleSupervisorRequest.getSupervisorId(),
+                dayScheduleSupervisorRequest.getDay()
+        );
+        if(dayScheduleSupervisorResponse==null){
+            return -1;
+        }
+        return adminMapper.deleteScheduleSupervisorByDay(
+                dayScheduleSupervisorRequest.getSupervisorId(),
+                dayScheduleSupervisorRequest.getDay()
+        );
+    }
+
 
     @Override
     public CounselorResponse getCounselorById(Integer counselorId) {
@@ -218,27 +275,49 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<CounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize) {
+    public List<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize) {
+
         List<Counselor> counselors= visitorMapper.getCounselors();
-        List<CounselorResponse> counselorResponses=new ArrayList<>();
+        System.out.println("counselors: "+counselors);
+        List<AdminCounselorResponse> adminCounselorResponses=new ArrayList<>();
+        Counselor counselor=null;
         for (int i=0;i<counselors.size();i++){
-            CounselorResponse counselorResponse=new CounselorResponse();
-            BeanUtils.copyProperties(counselors.get(i),counselorResponse);
-            counselorResponses.add(counselorResponse);
+            AdminCounselorResponse adminCounselorResponse=new AdminCounselorResponse();
+            counselor=counselors.get(i);
+            Integer supervisorId=adminMapper.selectSuperviIdByBind(counselor.getId());
+            adminCounselorResponse.setName(counselor.getName());
+            adminCounselorResponse.setSupervisor(adminMapper.selectSuperviNameById(supervisorId));
+            adminCounselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
+            adminCounselorResponse.setSessionTime(adminMapper.selectSessionTimeById(counselor.getId()));
+            adminCounselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
+            adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(counselor.getId()));
+            adminCounselorResponses.add(adminCounselorResponse);
         }
-        return counselorResponses;
+        System.out.println("null: "+adminCounselorResponses);
+        PageHelper.startPage(page,pageSize);
+        PageInfo<AdminCounselorResponse> pageInfo=new PageInfo<>(adminCounselorResponses);
+        return pageInfo.getList();
     }
 
     @Override
-    public List<CounselorResponse> getCounselorByName(String name) {
+    public List<AdminCounselorResponse> getCounselorByName(String name) {
         List<Counselor> counselors=adminMapper.selectCounselorsByName(name);
-        List<CounselorResponse> counselorResponses=new ArrayList<>();
+        List<AdminCounselorResponse> adminCounselorResponses=new ArrayList<>();
+        Counselor counselor=null;
         for (int i=0;i<counselors.size();i++){
-            CounselorResponse counselorResponse=new CounselorResponse();
-            BeanUtils.copyProperties(counselors.get(i),counselorResponse);
-            counselorResponses.add(counselorResponse);
+            AdminCounselorResponse adminCounselorResponse=new AdminCounselorResponse();
+            counselor=counselors.get(i);
+            int supervisorId=adminMapper.selectSuperviIdByBind(counselor.getId());
+            adminCounselorResponse.setName(counselor.getName());
+            adminCounselorResponse.setSupervisor(adminMapper.selectSuperviNameById(supervisorId));
+            adminCounselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
+            adminCounselorResponse.setSessionTime(adminMapper.selectSessionTimeById(counselor.getId()));
+            adminCounselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
+            adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(counselor.getId()));
+            adminCounselorResponses.add(adminCounselorResponse);
         }
-        return counselorResponses;
+        System.out.println(name+":"+adminCounselorResponses);
+        return adminCounselorResponses;
     }
 
     @Override
