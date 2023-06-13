@@ -5,11 +5,15 @@ import com.eewoo.chat.pojo.VisitorComment;
 
 import com.eewoo.chat.pojo.Chat;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 
 public interface ChatService {
-    Chat findById(Long id);
 
-    boolean callCounselor(Integer counselorId);
+    boolean callCounselor(Integer counselorId, String counselorName);
 
     void endVCSession(String chatToken);
 
@@ -21,4 +25,13 @@ public interface ChatService {
 
     void endCSSession(String chatToken);
 
+    Integer getChatsNum();
+
+    List<Integer> getOnlineCounselors();
+
+    void getSessionInMongo(Integer sessionId, HttpServletResponse response);
+
+    void getSessionsInMongo(List<Integer> sessionIds, HttpServletResponse response);
+
+    Chat getSessionContent(Integer sessionId);
 }

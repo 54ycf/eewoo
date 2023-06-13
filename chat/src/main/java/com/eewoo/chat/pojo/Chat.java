@@ -1,6 +1,7 @@
 package com.eewoo.chat.pojo;
 
 import com.eewoo.common.pojo.Message;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,6 @@ import java.util.List;
 public class Chat {
     @Id
     private Long id;
-    private List<String> participants;
-    private List<Message> messages;
+    private List<String> participants = Lists.newArrayList();
+    private List<Message> messages = Lists.newArrayList();
 }

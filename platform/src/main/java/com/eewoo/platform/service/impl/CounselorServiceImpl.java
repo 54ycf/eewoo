@@ -1,7 +1,6 @@
 package com.eewoo.platform.service.impl;
 
 import com.eewoo.common.pojo.Counselor;
-//import com.eewoo.common.pojo.Session;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.security.LoginUser;
@@ -89,16 +88,4 @@ public class CounselorServiceImpl implements CounselorService {
         Integer id = user.getId();
         return mapper.getmassiveInfo(id);
     }
-
-//    @Override
-//    public Session fetchSessionIfAuthenticated(Integer item) {
-//        return null;
-//    }
-
-//    @Override
-//    public Session fetchSessionIfAuthenticated(Integer item) {
-//        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-//        Integer id = user.getId();
-//        return mapper.getSessionIfOk(id,item);
-//    }
 }

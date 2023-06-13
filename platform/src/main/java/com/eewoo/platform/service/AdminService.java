@@ -1,7 +1,8 @@
 package com.eewoo.platform.service;
 
 
-import com.eewoo.common.pojo.ScheduleCounselor;
+import com.eewoo.platform.pojo.vo.request.BindRequest;
+import com.eewoo.platform.pojo.vo.request.DayScheduleCounselorRequest;
 import com.eewoo.platform.pojo.vo.request.ScheduleCounselorRequest;
 import com.eewoo.platform.pojo.vo.request.ScheduleSupervisorRequest;
 import com.eewoo.platform.pojo.vo.response.*;
@@ -12,30 +13,68 @@ import java.util.List;
 public interface AdminService {
 
     int disableUser(Integer id, String role);
+    int enableUser(Integer id, String role);
 
-    List<SessionResponse> getSessions();
 
-    List<CounselorSupervisorResponse> getCounselors();
+    /**获取咨询记录**/
+    List<SessionResponse> getSessions(Integer page,Integer pageSize);
 
-    List<CounselorSupervisorResponse> getSupervisors();
 
+    /**获取咨询师**/
+    List<CounselorSupervisorResponse> getCounselors(Integer page,Integer pageSize);
+
+    /**获取督导**/
+    List<CounselorSupervisorResponse> getSupervisors(Integer page,Integer pageSize);
+
+    /**删除咨询师**/
     int removeCounselor(Integer id);
 
-    List<VisitorResponse> getVistors();
+    /**获取访客**/
+    List<VisitorResponse> getVistors(Integer page,Integer pageSize);
 
+    /**得到咨询数量最高的咨询师**/
     List<CounselorResponse> getTopSessions();
 
+    /**得到得分最高的咨询师**/
     List<CounselorResponse> getTopScoreCounselors();
 
+    /**获取咨询师排班(按星期)**/
     List<ScheduleCounselorResponse> getCounselorSchedules();
 
+    /**获取督导排班(按星期)**/
     List<ScheduleSupervisorResponse> getSupervisorSchedules();
 
+    /**添加咨询师排班(按星期)**/
     int putCounselorSchedule(ScheduleCounselorRequest scheduleCounselorRequest);
 
+    /**删除咨询师排班(按星期)**/
     int removeCounselorSchedule(ScheduleCounselorRequest scheduleCounselorRequest);
 
+    /**删除督导排班(按星期)**/
     int removeSupervisorSchedule(ScheduleSupervisorRequest scheduleSupervisorRequest);
+
+    /**获取咨询师排班(按日期)**/
+    List<DayScheduleCounselorResponse> getCounselorSchedulesByDay();
+
+    /**获取督导的排班表(按日期)**/
+    List<DayScheduleSupervisorResponse> getSupervisorSchedulesByDay();
+
+    /**添加咨询师排班(按日期)**/
+    int putCounselorScheduleByDay(DayScheduleCounselorRequest dayScheduleCounselorRequest);
+
+
+
+    /**获取某个咨询师的详细信息**/
+    CounselorResponse getCounselorById(Integer counselorId);
+
+    /**获取所有咨询师，不看督导系列**/
+    List<CounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize);
+
+    /**根据姓名获取咨询师**/
+    List<CounselorResponse> getCounselorByName(String name);
+
+    /**修改咨询师和督导的绑定关系**/
+    int reviseBind(BindRequest bindRequest);
 
 
 }

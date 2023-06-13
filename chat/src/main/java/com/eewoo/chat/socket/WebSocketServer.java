@@ -2,10 +2,12 @@ package com.eewoo.chat.socket;
 
 import com.alibaba.fastjson.JSON;
 import com.eewoo.chat.feign.AuthFeign;
+import com.eewoo.chat.pojo.Chat;
 import com.eewoo.chat.pojo.ChatInfo;
 import com.eewoo.chat.pojo.MessageSend;
 import com.eewoo.chat.pojo.SR;
 import com.eewoo.chat.service.ChatScheduler;
+import com.eewoo.common.pojo.Message;
 import com.eewoo.common.security.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,6 @@ public class WebSocketServer {
     public void setAuthFeign(AuthFeign authFeign){WebSocketServer.authFeign = authFeign;}
 
 
-
     //记录当前在线连接，key为role:id
     public static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
 
@@ -48,6 +49,9 @@ public class WebSocketServer {
     public static final Map<String, String> chatMap = new ConcurrentHashMap<>();
     //记录访客咨询师的聊天 v:id->c:id 或者 c:id->s:id
 //    public static final Set<String> chatSet = new ConcurrentHashSet<>();
+
+    //sessionId -> chat
+    public static final Map<Integer, Chat> sessionChatMap = new ConcurrentHashMap<>();
 
     //用于转发
     public static final Map<String, Session> relayMap = new ConcurrentHashMap<>();
@@ -120,7 +124,7 @@ public class WebSocketServer {
         sendMessage(SR.msg(msg.getContent(), chatInfo.getSenderKey()), sendTo);
         if (!chatInfo.getSenderKey().startsWith("s") && !chatInfo.getReceiverKey().startsWith("s")){ //只有访客-咨询师
             ChatScheduler.updateTime(chatToken);//更新chatToken时间
-//      TODO   chatService.store(sessionId, senderName, receiverName, timeStamp); //存储到mongo
+            sessionChatMap.get(chatInfo.getSessionId()).getMessages().add(new Message(chatInfo.getSenderName(),chatInfo.getReceiverName(),msg.getContent(),new Date().toString()));//聊天记录先存在内存，加一条
         }
         // TODO 聊天转发
 
