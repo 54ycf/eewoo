@@ -76,4 +76,18 @@ public class AccountController {
         }
         return R.err("督导用户名已存在");
     }
+
+    @PreAuthorize("hasAuthority('a')")
+        @PutMapping("/update-counselor")
+    public R updateCounselor(@RequestBody Counselor counselor){
+        accountService.updateCounselor(counselor);
+        return R.ok();
+    }
+
+    @PreAuthorize("hasAuthority('a')")
+    @PutMapping("/update-supervisor")
+    public R updateCounselor(@RequestBody Supervisor supervisor){
+        accountService.updateSupervisor(supervisor);
+        return R.ok();
+    }
 }

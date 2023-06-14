@@ -14,4 +14,6 @@ public class Counselor extends User{
     String workPlace;
     String title;
 
+    Integer bindSupervisorId;
+
 }
