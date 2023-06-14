@@ -59,10 +59,14 @@ public class SupervisorController {
      * @param size
      * @return
      */
-    @GetMapping("/counsult-record/table")
+    @PostMapping("/counsult-record/table")
     public R bindconuselors(@Param("page") Integer page, @Param("size") Integer size)
     {
-        List<BindCounselorResponse> list = superservice.bindCounselorsList(page, size);
+        List<BindCounselorResponse> list;
+        if(page == null || size == null)
+            list = superservice.bindCounselorsList(5, 20);
+        else
+            list = superservice.bindCounselorsList(page, size);
         if(list.size()>0)
             return R.ok(list);
         else
@@ -101,5 +105,6 @@ public class SupervisorController {
             return R.err("500","SERVER　ＥＲＲＯＲ");
 
     }
+
 
 }
