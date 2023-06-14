@@ -23,6 +23,26 @@ public class SR {
         return response;
     }
 
+    public static SR img(String url, String from){
+        SR response = new SR();
+        response.setType("img");
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url);
+        map.put("from", from);
+        response.setData(map);
+        return response;
+    }
+
+    public static SR voice(String url, String from){
+        SR response = new SR();
+        response.setType("voice");
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url);
+        map.put("from", from);
+        response.setData(map);
+        return response;
+    }
+
     /**
      * 提醒做评价
      * @param chatToken

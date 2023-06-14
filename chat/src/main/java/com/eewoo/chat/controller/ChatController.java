@@ -9,8 +9,10 @@ import com.eewoo.common.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -136,6 +138,21 @@ public class ChatController {
     public R getSessionContent(@RequestParam Integer sessionId){
         Chat chat = chatService.getSessionContent(sessionId);
         return R.ok(chat);
+    }
+
+
+    @PostMapping("/file/upload")
+    public R uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        String path = fileService.uploadFile(file);
+        if (path != null) {
+            return R.ok(path);
+        }
+        return R.err("上传失败哦");
+    }
+
+    @GetMapping("/file/get/{filename}")
+    public void getFile(@PathVariable String filename, HttpServletResponse response) {
+        fileService.getFileStream(filename, response);
     }
 
 
