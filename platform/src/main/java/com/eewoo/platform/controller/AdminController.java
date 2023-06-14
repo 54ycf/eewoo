@@ -52,11 +52,12 @@ public class AdminController {
     }
 
     /**获取督导**/
-    @GetMapping("/supervisor")
+    @GetMapping("/supervisor/search")
     public R getSupervisors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
         List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getSupervisors(page, size);
         return R.ok(counselorSupervisorResponses);
     }
+
 
     @DeleteMapping("/consultant/{id}")
     public R removeCounselor(@PathVariable("id")Integer id){
