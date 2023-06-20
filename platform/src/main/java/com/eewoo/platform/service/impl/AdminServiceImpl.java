@@ -285,7 +285,9 @@ public class AdminServiceImpl implements AdminService {
             AdminCounselorResponse adminCounselorResponse=new AdminCounselorResponse();
             counselor=counselors.get(i);
             Integer supervisorId=adminMapper.selectSuperviIdByBind(counselor.getId());
+            adminCounselorResponse.setCounselorId(counselor.getId());
             adminCounselorResponse.setName(counselor.getName());
+            adminCounselorResponse.setSupervisorId(supervisorId);
             adminCounselorResponse.setSupervisor(adminMapper.selectSuperviNameById(supervisorId));
             adminCounselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
             adminCounselorResponse.setSessionTime(adminMapper.selectSessionTimeById(counselor.getId()));
@@ -309,6 +311,8 @@ public class AdminServiceImpl implements AdminService {
             counselor=counselors.get(i);
             int supervisorId=adminMapper.selectSuperviIdByBind(counselor.getId());
             adminCounselorResponse.setName(counselor.getName());
+            adminCounselorResponse.setCounselorId(counselor.getId());
+            adminCounselorResponse.setSupervisorId(supervisorId);
             adminCounselorResponse.setSupervisor(adminMapper.selectSuperviNameById(supervisorId));
             adminCounselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
             adminCounselorResponse.setSessionTime(adminMapper.selectSessionTimeById(counselor.getId()));
