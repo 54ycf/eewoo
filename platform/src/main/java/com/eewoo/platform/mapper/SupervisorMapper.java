@@ -23,8 +23,9 @@ public interface SupervisorMapper {
     List<CounselorResponse> getCounselors();
 
 
-    @Select("SELECT user_counselor.name , session.duration,session.start_time FROM user_counselor join session ")
-    List<BindCounselorResponse> getbindcounselors(  );
+    //bind counselor 's status name ,id but also need session figures
+    @Select("SELECT counselor_id ,user_counselor.username FROM binding join user_counselor on binding.counselor_id = user_counselor.id where supervisor_id = #{id} ")
+    List<BindCounselorResponse> getbindcounselors( @Param("id")Integer id );
 
     @Select("SELECT name FROM user_supervisor WHERE id = #{id}")
     String getName(@Param("id") Integer id);

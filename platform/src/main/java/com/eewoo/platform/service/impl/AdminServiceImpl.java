@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.el.lang.ELArithmetic.add;
+
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
@@ -231,14 +233,23 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<CounselorResponse> getCounselorByName(String name) {
+        if(name.equals("defalut_name"))
+            return new ArrayList<>();
+
         List<Counselor> counselors=adminMapper.selectCounselorsByName(name);
         List<CounselorResponse> counselorResponses=new ArrayList<>();
-        for (int i=0;i<counselors.size();i++){
-            CounselorResponse counselorResponse=new CounselorResponse();
-            BeanUtils.copyProperties(counselors.get(i),counselorResponse);
-            counselorResponses.add(counselorResponse);
-        }
-        return counselorResponses;
+        if(counselors != null)
+            for (int i=0;i<counselors.size();i++){
+                CounselorResponse counselorResponse=new CounselorResponse();
+                BeanUtils.copyProperties(counselors.get(i),counselorResponse);
+                counselorResponses.add(counselorResponse);
+            }
+        else
+            return null;
+        if(counselorResponses != null)
+            return counselorResponses;
+        else
+            return null;
     }
 
     @Override

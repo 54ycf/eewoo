@@ -45,7 +45,6 @@ public class CounselorController {
     public R getCounselorInfo()
     {
         Counselor this_conselor = counselorService.getAllInfoExceptPassword();
-
         if(this_conselor != null)
             return R.ok(this_conselor);
         else
@@ -54,10 +53,12 @@ public class CounselorController {
 
     /**
      * 查询咨询记录列表，涉及到分页操作，前端传来page和size
+     * 访客和咨询师对话的概览界面展示
      * @return
      */
     @GetMapping("/consult-list")
-    public R getConsultList(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
+    public R getConsultList(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                            @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
     {
         List<Consult> list = counselorService.getConsult(page, size);
         if(list!= null)

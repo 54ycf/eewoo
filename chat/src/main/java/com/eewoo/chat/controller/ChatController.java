@@ -126,7 +126,6 @@ public class ChatController {
         chatService.getSessionsInMongo(sessionIds, response);
     }
 
-
     /**
      * 获取某一次的聊天
      * @param sessionId
