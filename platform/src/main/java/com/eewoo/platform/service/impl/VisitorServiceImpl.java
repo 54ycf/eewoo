@@ -1,6 +1,7 @@
 package com.eewoo.platform.service.impl;
 
 import com.eewoo.common.pojo.Counselor;
+import com.eewoo.platform.mapper.AdminMapper;
 import com.eewoo.platform.pojo.model.Session;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.pojo.Visitor;
@@ -23,6 +24,9 @@ public class VisitorServiceImpl implements VisitorService {
     @Autowired
     VisitorMapper visitorMapper;
 
+    @Autowired
+    AdminMapper adminMapper;
+
     /**获取访客信息**/
     @Override
     public VisitorResponse getInfo() {
@@ -39,9 +43,13 @@ public class VisitorServiceImpl implements VisitorService {
     public List<CounselorResponse> getCounselors() {
         List<Counselor> counselors= visitorMapper.getCounselors();
         List<CounselorResponse> counselorResponses=new ArrayList<>();
+        Counselor counselor=null;
         for (int i=0;i<counselors.size();i++){
             CounselorResponse counselorResponse=new CounselorResponse();
-            BeanUtils.copyProperties(counselors.get(i),counselorResponse);
+            counselor=counselors.get(i);
+            BeanUtils.copyProperties(counselor,counselorResponse);
+            counselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
+            counselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
             counselorResponses.add(counselorResponse);
         }
         return counselorResponses;
@@ -58,6 +66,8 @@ public class VisitorServiceImpl implements VisitorService {
             Counselor counselor= visitorMapper.getHistoryCounselor(sessionResponses.get(i).getCounselorId());
             CounselorResponse counselorResponse=new CounselorResponse();
             BeanUtils.copyProperties(counselor,counselorResponse);
+            counselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
+            counselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
             counselorResponses.add(counselorResponse);
         }
         return new ArrayList<>(counselorResponses);

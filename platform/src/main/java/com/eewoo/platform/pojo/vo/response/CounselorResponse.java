@@ -25,7 +25,7 @@ public class CounselorResponse {
     String email;
     String workPlace;
     String title;
-    int sessionCount;
-    int sessionScore;
+    Integer sessionCount;
+    Double sessionScore;
 
 }
