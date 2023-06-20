@@ -5,6 +5,7 @@ import com.eewoo.common.util.R;
 import com.eewoo.platform.feign.AuthFeign;
 import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.service.AdminService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class AdminController {
 
     @GetMapping("/consul_records")
     public R getSessions(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
-        List<SessionResponse> sessionResponses=adminService.getSessions(page,size);
+        PageInfo<SessionResponse> sessionResponses=adminService.getSessions(page,size);
         return R.ok(sessionResponses);
     }
 
@@ -56,7 +57,7 @@ public class AdminController {
     public R getSupervisors(@RequestParam(name = "name", required = false) String name,
                             @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
                             @RequestParam(name = "size", required = false, defaultValue = "20")Integer size){
-        List<AdminSupervisorResponse> adminSupervisorResponses=null;
+        PageInfo<AdminSupervisorResponse> adminSupervisorResponses=null;
         if(name==null || name.length()<1){
             adminSupervisorResponses=adminService.getSupervisorsWithoutCounsel(page,size);
             return R.ok(adminSupervisorResponses);
@@ -79,7 +80,7 @@ public class AdminController {
     /**获取访客**/
     @GetMapping("/visitor")
     public R getVisitors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
-        List<VisitorResponse> visitorResponses=adminService.getVistors(page, size);
+        PageInfo<VisitorResponse> visitorResponses=adminService.getVistors(page, size);
         return R.ok(visitorResponses);
     }
 
@@ -202,7 +203,7 @@ public class AdminController {
     public R getCounselorByName(@RequestParam(name = "name", required = false) String name,
                                 @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
                                 @RequestParam(name = "size", required = false, defaultValue = "20")Integer size){
-        List<AdminCounselorResponse> adminCounselorResponses=null;
+        PageInfo<AdminCounselorResponse> adminCounselorResponses=null;
         System.out.println("name="+name);
         System.out.println("name size"+name.length());
         if(name==null || name.length()<1){

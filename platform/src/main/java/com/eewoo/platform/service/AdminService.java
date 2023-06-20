@@ -3,6 +3,7 @@ package com.eewoo.platform.service;
 
 import com.eewoo.platform.pojo.vo.request.*;
 import com.eewoo.platform.pojo.vo.response.*;
+import com.github.pagehelper.PageInfo;
 
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface AdminService {
 
 
     /**获取咨询记录**/
-    List<SessionResponse> getSessions(Integer page,Integer pageSize);
+    PageInfo<SessionResponse> getSessions(Integer page, Integer pageSize);
 
 
     /**获取咨询师**/
@@ -27,7 +28,7 @@ public interface AdminService {
     int removeCounselor(Integer id);
 
     /**获取访客**/
-    List<VisitorResponse> getVistors(Integer page,Integer pageSize);
+    PageInfo<VisitorResponse> getVistors(Integer page,Integer pageSize);
 
     /**得到咨询数量最高的咨询师**/
     List<CounselorResponse> getTopSessions();
@@ -72,14 +73,14 @@ public interface AdminService {
     CounselorResponse getCounselorById(Integer counselorId);
 
     /**获取所有咨询师，不看督导系列**/
-    List<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize);
+    PageInfo<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize);
 
     /**根据姓名获取咨询师**/
-    List<AdminCounselorResponse> getCounselorByName(String name,Integer page,Integer pageSize);
+    PageInfo<AdminCounselorResponse> getCounselorByName(String name,Integer page,Integer pageSize);
 
-    List<AdminSupervisorResponse> getSupervisorsWithoutCounsel(Integer page,Integer pageSize);
+    PageInfo<AdminSupervisorResponse> getSupervisorsWithoutCounsel(Integer page,Integer pageSize);
 
-    List<AdminSupervisorResponse> getSupervisorByName(String name,Integer page,Integer pageSize);
+    PageInfo<AdminSupervisorResponse> getSupervisorByName(String name,Integer page,Integer pageSize);
 
     /**修改咨询师和督导的绑定关系**/
     int reviseBind(BindRequest bindRequest);

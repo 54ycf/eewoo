@@ -44,11 +44,11 @@ public class AdminServiceImpl implements AdminService {
      * 获取咨询记录
      * **/
     @Override
-    public List<SessionResponse> getSessions(Integer page,Integer pageSize) {
+    public PageInfo<SessionResponse> getSessions(Integer page,Integer pageSize) {
         PageHelper.startPage(page, pageSize);
         List<SessionResponse> sessionResponses = adminMapper.getSessions();
         PageInfo<SessionResponse> pageInfo = new PageInfo<>(sessionResponses);
-        return pageInfo.getList();
+        return pageInfo;
     }
 
 
@@ -87,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**得到访客**/
     @Override
-    public List<VisitorResponse> getVistors(Integer page,Integer pageSize) {
+    public PageInfo<VisitorResponse> getVistors(Integer page,Integer pageSize) {
         PageHelper.startPage(page,pageSize);
         List<Visitor> visitors= adminMapper.getVisitors();
         List<VisitorResponse> visitorResponses=new ArrayList<>();
@@ -97,7 +97,7 @@ public class AdminServiceImpl implements AdminService {
             visitorResponses.add(visitorResponse);
         }
         PageInfo<VisitorResponse> pageInfo=new PageInfo<>(visitorResponses);
-        return pageInfo.getList();
+        return pageInfo;
     }
 
     /**得到会话数量最高的咨询师**/
@@ -289,7 +289,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize) {
+    public PageInfo<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize) {
 
         List<Counselor> counselors= visitorMapper.getCounselors();
         System.out.println("counselors: "+counselors);
@@ -313,11 +313,11 @@ public class AdminServiceImpl implements AdminService {
         System.out.println("null: "+adminCounselorResponses);
         PageHelper.startPage(page,pageSize);
         PageInfo<AdminCounselorResponse> pageInfo=new PageInfo<>(adminCounselorResponses);
-        return pageInfo.getList();
+        return pageInfo;
     }
 
     @Override
-    public List<AdminCounselorResponse> getCounselorByName(String name, Integer page,Integer pageSize) {
+    public PageInfo<AdminCounselorResponse> getCounselorByName(String name, Integer page,Integer pageSize) {
         List<Counselor> counselors=adminMapper.selectCounselorsByName(name);
         List<AdminCounselorResponse> adminCounselorResponses=new ArrayList<>();
         Counselor counselor=null;
@@ -338,11 +338,11 @@ public class AdminServiceImpl implements AdminService {
         }
         PageHelper.startPage(page,pageSize);
         PageInfo<AdminCounselorResponse> pageInfo=new PageInfo<>(adminCounselorResponses);
-        return pageInfo.getList();
+        return pageInfo;
     }
 
     @Override
-    public List<AdminSupervisorResponse> getSupervisorsWithoutCounsel(Integer page, Integer pageSize) {
+    public PageInfo<AdminSupervisorResponse> getSupervisorsWithoutCounsel(Integer page, Integer pageSize) {
         List<Supervisor> supervisors=adminMapper.getSupervisors();
         List<AdminSupervisorResponse> adminSupervisorResponses=new ArrayList<>();
         Supervisor supervisor=null;
@@ -364,11 +364,11 @@ public class AdminServiceImpl implements AdminService {
         }
         PageHelper.startPage(page,pageSize);
         PageInfo<AdminSupervisorResponse> pageInfo=new PageInfo<>(adminSupervisorResponses);
-        return pageInfo.getList();
+        return pageInfo;
     }
 
     @Override
-    public List<AdminSupervisorResponse> getSupervisorByName(String name,Integer page,Integer pageSize) {
+    public PageInfo<AdminSupervisorResponse> getSupervisorByName(String name,Integer page,Integer pageSize) {
         List<Supervisor> supervisors=adminMapper.selectSupervisorsByName(name);
         List<AdminSupervisorResponse> adminSupervisorResponses=new ArrayList<>();
         Supervisor supervisor=null;
@@ -391,7 +391,7 @@ public class AdminServiceImpl implements AdminService {
         }
         PageHelper.startPage(page,pageSize);
         PageInfo<AdminSupervisorResponse> pageInfo=new PageInfo<>(adminSupervisorResponses);
-        return pageInfo.getList();
+        return pageInfo;
     }
 
     @Override
