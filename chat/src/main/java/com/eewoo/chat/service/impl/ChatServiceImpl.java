@@ -133,6 +133,8 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void counselorComment(CounselorComment counselorComment) {
         String chatToken = counselorComment.getChatToken();
+        System.out.println(chatToken);
+        WebSocketServer.tokenInfoMap.forEach((k,v) -> System.out.println(k+" " + v.getSenderName() +" "+ v.getReceiverName()));
         ChatInfo chatInfo = WebSocketServer.tokenInfoMap.get(chatToken);
         CounselorCommentRequest counselorCommentRequest = new CounselorCommentRequest();
         counselorCommentRequest.setSessionId(chatInfo.getSessionId());

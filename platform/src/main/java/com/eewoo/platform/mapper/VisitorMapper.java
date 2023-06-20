@@ -36,6 +36,6 @@ public interface VisitorMapper {
     @Select("Select * from session where visitor_id=#{visitorId}")
     List<Session> getHistorySessions(Integer visitorId);
 
-    @Update("UPDATE session SET end_time = #{endTime}, duration = (UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time))/60 WHERE id = #{sessionId}")
+    @Update("UPDATE session SET end_time = #{endTime}, duration = (UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time) + 60)/60 WHERE id = #{sessionId}")
     int endSession(Integer sessionId, Date endTime);
 }
