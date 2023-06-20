@@ -29,11 +29,10 @@ public class CounselorServiceImpl implements CounselorService {
     @Override
     public List<Consult> getConsult(Integer page, Integer size) {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        Integer c_id = user.getId();
-
+        Integer c_id = user.getId();//得到本咨询师聊天的访客的简略会话信息
         PageHelper.startPage(page,size);
         List<Consult> users = mapper.getAllConsults(c_id);
-        PageInfo<Consult> pageInfo = new PageInfo<>();
+        PageInfo<Consult> pageInfo = new PageInfo<>(users);
         return pageInfo.getList();
         /*
          * 通过token获取counselor用户的id，交给mapper层返回符合资格的访客列表
@@ -46,7 +45,6 @@ public class CounselorServiceImpl implements CounselorService {
           mapper.createEvaluation(sessionID, feedback, type);
           mapper.endSession(sessionID, new Date());
           return 1;
-
     }
 
     @Override

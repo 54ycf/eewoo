@@ -5,9 +5,11 @@ import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.RoughCouselor;
 import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
+import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
 import com.eewoo.platform.pojo.vo.response.VisitorResponse;
 import com.eewoo.platform.pojo.vo.request.FindCounselorMsg;
 import com.eewoo.platform.service.SupervisorService;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,15 +25,10 @@ public class SupervisorController {
     SupervisorService superservice;
 
 
-    /**
-     * 获得督导登陆之后除密码外的所有个人存储字段
-     */
-
+    /**获得督导登陆之后除密码外的所有个人存储字段*/
     @GetMapping("/supervisor-info")
     public R getSupervisorInfo() {
-
         Supervisor sp = superservice.getSupervisorInfo();
-
         if(sp != null)
         {
             return R.ok(sp);
@@ -39,13 +36,13 @@ public class SupervisorController {
         else
             return R.err("500","服务器内部错误");
     }
+
     /**
      * 获得访客咨询的列表。
      * @return
      */
     @GetMapping("/visitor-list")
     public R getvisitorList() {
-
         List<VisitorResponse> visitor_list = superservice.getVisitorList();
         if(visitor_list.size() > 0)
             return R.ok(visitor_list);
@@ -54,24 +51,18 @@ public class SupervisorController {
     }
 
     /**
-     * 获得与本督导具有绑定关系的咨询师的列表。page和size用来分页。
+     * 获得与本督导具有绑定关系的咨询师的列表 and status。page和size用来分页。
      * @param page
      * @param size
      * @return
      */
     @PostMapping("/counsult-record/table")
-    public R bindconuselors(@Param("page") Integer page, @Param("size") Integer size)
+    public R bindconuselors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
     {
-        List<BindCounselorResponse> list;
-        if(page == null || size == null)
-            list = superservice.bindCounselorsList(5, 20);
-        else
-            list = superservice.bindCounselorsList(page, size);
-        if(list.size()>0)
-            return R.ok(list);
-        else
-            return R.err("500","找不到已绑定的督导咨询列表");
+        PageInfo<BindCounselorResponse> bindCounselorResponsePageInfo = superservice.bindCounselorsList(page, size);
+        return R.ok(bindCounselorResponsePageInfo);
     }
+
 
     /**
      * 得到和自己有聊天记录的咨询师的一个大致的左侧边列表，包含咨询师的名字和邮箱就可以了，

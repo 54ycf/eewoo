@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.el.lang.ELArithmetic.add;
+
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
@@ -392,6 +394,7 @@ public class AdminServiceImpl implements AdminService {
         PageHelper.startPage(page,pageSize);
         PageInfo<AdminSupervisorResponse> pageInfo=new PageInfo<>(adminSupervisorResponses);
         return pageInfo;
+
     }
 
     @Override
