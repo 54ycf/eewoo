@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class VisitorResponse {
     Integer id;
+    Integer banned;
     String username;
     String name;
     String profile;

@@ -53,9 +53,17 @@ public class AdminController {
 
     /**获取督导**/
     @GetMapping("/supervisor/search")
-    public R getSupervisors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
-        List<CounselorSupervisorResponse> counselorSupervisorResponses= adminService.getSupervisors(page, size);
-        return R.ok(counselorSupervisorResponses);
+    public R getSupervisors(@RequestParam(name = "name", required = false) String name,
+                            @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
+                            @RequestParam(name = "size", required = false, defaultValue = "20")Integer size){
+        List<AdminSupervisorResponse> adminSupervisorResponses=null;
+        if(name==null || name.length()<1){
+            adminSupervisorResponses=adminService.getSupervisorsWithoutCounsel(page,size);
+            return R.ok(adminSupervisorResponses);
+        }
+        adminSupervisorResponses=adminService.getSupervisorByName(name,page,size);
+        return R.ok(adminSupervisorResponses);
+
     }
 
 
@@ -191,15 +199,17 @@ public class AdminController {
 
     /**获取/按姓名搜索咨询师**/
     @GetMapping("/consultant/search")
-    public R getCounselorByName(@RequestParam(name = "name", required = false) String name){
+    public R getCounselorByName(@RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
+                                @RequestParam(name = "size", required = false, defaultValue = "20")Integer size){
         List<AdminCounselorResponse> adminCounselorResponses=null;
         System.out.println("name="+name);
         System.out.println("name size"+name.length());
         if(name==null || name.length()<1){
-            adminCounselorResponses= adminService.getCounselorsWithoutSupervi(1,20);
+            adminCounselorResponses= adminService.getCounselorsWithoutSupervi(page,size);
             return R.ok(adminCounselorResponses);
         }
-        adminCounselorResponses= adminService.getCounselorByName(name);
+        adminCounselorResponses= adminService.getCounselorByName(name,page,size);
         return R.ok(adminCounselorResponses);
     }
 

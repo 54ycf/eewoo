@@ -7,13 +7,14 @@ import java.util.List;
 
 @Data
 public class AdminCounselorResponse {
-    private int counselorId;
+    private Integer counselorId;
     private String name;
     private String title="咨询师";
     private String supervisor;
-    private int supervisorId;
+    private Integer supervisorId;
     private Integer sessionCount;
     private Integer sessionTime;
     private Double sessionScore;
     private List<Integer> schedule;
+    private Integer banned;
 }

@@ -136,6 +136,27 @@ public interface AdminMapper {
     @Select("Select weekday from schedule_counselor where counselor_id=#{counselorId}")
     List<Integer> getCounselorScheduleById(Integer counselorId);
 
+    /**获取所有督导**/
+    @Select("Select * from user_supervisor")
+    List<Supervisor> getSupervisors();
+
+    /**根据counselorId获取督导id**/
+    @Select("Select counselor_id from binding where supervisor_id=#{supervisorId}")
+    List<Integer> selectCounselorIdByBind(Integer supervisorId);
+
+    /**根据id获取counselor**/
+    @Select("Select * from user_counselor where id=#{counselorId}")
+    Counselor selectCounselorById(int counselorId);
+
+    /**根据id获取督导的排班**/
+    @Select("Select weekday from schedule_supervisor where supervisor_id=#{supervisorId}")
+    List<Integer> getSupervisorScheduleById(Integer supervisorId);
+
+    /**根据姓名获取督导**/
+
+    @Select("Select * from user_supervisor where name=#{name}")
+    List<Supervisor> selectSupervisorsByName(String name);
+
 
 
 

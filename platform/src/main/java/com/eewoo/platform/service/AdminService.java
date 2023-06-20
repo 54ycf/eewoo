@@ -75,7 +75,11 @@ public interface AdminService {
     List<AdminCounselorResponse> getCounselorsWithoutSupervi(Integer page, Integer pageSize);
 
     /**根据姓名获取咨询师**/
-    List<AdminCounselorResponse> getCounselorByName(String name);
+    List<AdminCounselorResponse> getCounselorByName(String name,Integer page,Integer pageSize);
+
+    List<AdminSupervisorResponse> getSupervisorsWithoutCounsel(Integer page,Integer pageSize);
+
+    List<AdminSupervisorResponse> getSupervisorByName(String name,Integer page,Integer pageSize);
 
     /**修改咨询师和督导的绑定关系**/
     int reviseBind(BindRequest bindRequest);

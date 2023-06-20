@@ -1,9 +1,6 @@
 package com.eewoo.platform.service.impl;
 
-import com.eewoo.common.pojo.Counselor;
-import com.eewoo.common.pojo.ScheduleCounselor;
-import com.eewoo.common.pojo.ScheduleSupervisor;
-import com.eewoo.common.pojo.Visitor;
+import com.eewoo.common.pojo.*;
 import com.eewoo.common.util.Constant;
 import com.eewoo.platform.mapper.AdminMapper;
 import com.eewoo.platform.mapper.UserMapper;
@@ -193,12 +190,29 @@ public class AdminServiceImpl implements AdminService {
     /**获取咨询师排班表(按日期)**/
     @Override
     public List<DayScheduleCounselorResponse> getCounselorSchedulesByDay() {
-        return adminMapper.getCounselorSchedulesByDay();
+        List<DayScheduleCounselorResponse> dayScheduleCounselorResponses=adminMapper.getCounselorSchedulesByDay();
+        DayScheduleCounselorResponse dayScheduleCounselorResponse=null;
+        for (int i=0;i<dayScheduleCounselorResponses.size();i++){
+            dayScheduleCounselorResponse=dayScheduleCounselorResponses.get(i);
+            dayScheduleCounselorResponse.setCounselorName(adminMapper.selectCounselorById(
+                    dayScheduleCounselorResponse.getCounselorId()
+            ).getName());
+        }
+        return dayScheduleCounselorResponses;
+
     }
 
     @Override
     public List<DayScheduleSupervisorResponse> getSupervisorSchedulesByDay() {
-        return adminMapper.getSupervisorSchedulesByDay();
+        List<DayScheduleSupervisorResponse> dayScheduleSupervisorResponses=adminMapper.getSupervisorSchedulesByDay();
+        DayScheduleSupervisorResponse dayScheduleSupervisorResponse=null;
+        for (int i=0;i<dayScheduleSupervisorResponses.size();i++){
+            dayScheduleSupervisorResponse=dayScheduleSupervisorResponses.get(i);
+            dayScheduleSupervisorResponse.setSupervisorName(adminMapper.selectSuperviNameById(
+                    dayScheduleSupervisorResponse.getSupervisorId()
+            ));
+        }
+        return dayScheduleSupervisorResponses;
     }
 
     @Override
@@ -293,6 +307,7 @@ public class AdminServiceImpl implements AdminService {
             adminCounselorResponse.setSessionTime(adminMapper.selectSessionTimeById(counselor.getId()));
             adminCounselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
             adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(counselor.getId()));
+            adminCounselorResponse.setBanned(counselor.getBanned());
             adminCounselorResponses.add(adminCounselorResponse);
         }
         System.out.println("null: "+adminCounselorResponses);
@@ -302,7 +317,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<AdminCounselorResponse> getCounselorByName(String name) {
+    public List<AdminCounselorResponse> getCounselorByName(String name, Integer page,Integer pageSize) {
         List<Counselor> counselors=adminMapper.selectCounselorsByName(name);
         List<AdminCounselorResponse> adminCounselorResponses=new ArrayList<>();
         Counselor counselor=null;
@@ -318,10 +333,65 @@ public class AdminServiceImpl implements AdminService {
             adminCounselorResponse.setSessionTime(adminMapper.selectSessionTimeById(counselor.getId()));
             adminCounselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
             adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(counselor.getId()));
+            adminCounselorResponse.setBanned(counselor.getBanned());
             adminCounselorResponses.add(adminCounselorResponse);
         }
-        System.out.println(name+":"+adminCounselorResponses);
-        return adminCounselorResponses;
+        PageHelper.startPage(page,pageSize);
+        PageInfo<AdminCounselorResponse> pageInfo=new PageInfo<>(adminCounselorResponses);
+        return pageInfo.getList();
+    }
+
+    @Override
+    public List<AdminSupervisorResponse> getSupervisorsWithoutCounsel(Integer page, Integer pageSize) {
+        List<Supervisor> supervisors=adminMapper.getSupervisors();
+        List<AdminSupervisorResponse> adminSupervisorResponses=new ArrayList<>();
+        Supervisor supervisor=null;
+        for (int i=0;i<supervisors.size();i++){
+            AdminSupervisorResponse adminSupervisorResponse=new AdminSupervisorResponse();
+            supervisor=supervisors.get(i);
+            List<Integer> counselorIds=adminMapper.selectCounselorIdByBind(supervisor.getId());
+            List<Counselor> counselors=new ArrayList<>();
+            for (int j=0;j<counselorIds.size();j++){
+                Counselor counselor=adminMapper.selectCounselorById(counselorIds.get(j));
+                counselors.add(counselor);
+            }
+            adminSupervisorResponse.setSupervisorId(supervisor.getId());
+            adminSupervisorResponse.setName(supervisor.getName());
+            adminSupervisorResponse.setCounselors(counselors);
+            adminSupervisorResponse.setSchedule(adminMapper.getSupervisorScheduleById(supervisor.getId()));
+            adminSupervisorResponse.setBanned(supervisor.getBanned());
+            adminSupervisorResponses.add(adminSupervisorResponse);
+        }
+        PageHelper.startPage(page,pageSize);
+        PageInfo<AdminSupervisorResponse> pageInfo=new PageInfo<>(adminSupervisorResponses);
+        return pageInfo.getList();
+    }
+
+    @Override
+    public List<AdminSupervisorResponse> getSupervisorByName(String name,Integer page,Integer pageSize) {
+        List<Supervisor> supervisors=adminMapper.selectSupervisorsByName(name);
+        List<AdminSupervisorResponse> adminSupervisorResponses=new ArrayList<>();
+        Supervisor supervisor=null;
+        for (int i=0;i<supervisors.size();i++){
+            AdminSupervisorResponse adminSupervisorResponse=new AdminSupervisorResponse();
+            supervisor=supervisors.get(i);
+            List<Integer> counselorIds=adminMapper.selectCounselorIdByBind(supervisor.getId());
+            List<Counselor> counselors=new ArrayList<>();
+            for (int j=0;j<counselorIds.size();j++){
+                Counselor counselor=adminMapper.selectCounselorById(counselorIds.get(j));
+                counselors.add(counselor);
+            }
+            adminSupervisorResponse.setSupervisorId(supervisor.getId());
+            adminSupervisorResponse.setName(supervisor.getName());
+            adminSupervisorResponse.setCounselors(counselors);
+            adminSupervisorResponse.setSchedule(adminMapper.getSupervisorScheduleById(supervisor.getId()));
+            adminSupervisorResponse.setBanned(supervisor.getBanned());
+            adminSupervisorResponses.add(adminSupervisorResponse);
+
+        }
+        PageHelper.startPage(page,pageSize);
+        PageInfo<AdminSupervisorResponse> pageInfo=new PageInfo<>(adminSupervisorResponses);
+        return pageInfo.getList();
     }
 
     @Override

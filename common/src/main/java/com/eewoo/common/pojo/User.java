@@ -10,4 +10,5 @@ public class User {
     String password;
     String name;
     String profile;
+    Integer banned;
 }
