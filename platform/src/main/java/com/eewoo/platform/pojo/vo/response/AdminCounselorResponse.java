@@ -18,4 +18,10 @@ public class AdminCounselorResponse {
     private Double sessionScore;
     private List<Integer> schedule;
     private Integer banned;
+
+    private Integer age;
+    private String idCard;
+    private String phone;
+    private String email;
+    private String workPlace;
 }

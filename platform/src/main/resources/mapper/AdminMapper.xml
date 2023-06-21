@@ -5,9 +5,9 @@
 <mapper namespace="com.eewoo.platform.mapper.AdminMapper">
 
     <select id="getCounselorList" parameterType="java.lang.String" resultType="com.eewoo.platform.pojo.vo.response.AdminCounselorResponse">
-        SELECT counselor_id, name, title, supervisor, supervisor_id, session_count, session_time, session_score, banned
+        SELECT counselor_id, name, title, supervisor, supervisor_id, session_count, session_time, session_score, banned, age, id_card, phone, email, work_place
         FROM
-            (SELECT uc.id as counselor_id, uc.name as name, uc.title as title, us.name as supervisor, us.id as supervisor_id, uc.banned as banned
+             (SELECT uc.id as counselor_id, uc.name as name, uc.title as title, us.name as supervisor, us.id as supervisor_id, uc.banned as banned, uc.age as age, uc.id_card as id_card, uc.phone as phone, uc.email as email, uc.work_place as work_place
              FROM user_counselor as uc
                       LEFT JOIN binding ON uc.id=binding.counselor_id
                       LEFT JOIN user_supervisor as us ON us.id=binding.supervisor_id

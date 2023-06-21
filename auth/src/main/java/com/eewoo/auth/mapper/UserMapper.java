@@ -29,7 +29,7 @@ public interface UserMapper {
             "(username,password,name,age,id_card,phone,email,work_place,title) VALUES " +
             "(#{username},#{password},#{name},#{age},#{idCard},#{phone},#{email},#{workPlace},#{title})")
     int addCounselor(Counselor counselor);
-    @Insert("INSERT INTO binding (counselor_id, supervisor_id) VALUES (#{counselorId},#{supervisorId})")
+    @Insert("INSERT INTO binding (counselor_id, supervisor_id) VALUES (#{id},#{bindSupervisorId})")
     int addBindingRelationship(Counselor counselor);
 
     @Insert("INSERT INTO user_supervisor" +
