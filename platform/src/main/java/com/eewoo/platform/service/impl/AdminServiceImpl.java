@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.el.lang.ELArithmetic.add;
-
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
@@ -401,6 +399,17 @@ public class AdminServiceImpl implements AdminService {
     public int reviseBind(BindRequest bindRequest) {
         return adminMapper.updateBind(bindRequest.getCounselorId(),
                 bindRequest.getSupervisorId());
+    }
+
+    @Override
+    public PageInfo<AdminCounselorResponse> getCounselorList(Integer page, Integer size, String name) {
+        PageHelper.startPage(page, size);
+        List<AdminCounselorResponse> counselorList  = adminMapper.getCounselorList(name);
+        PageInfo<AdminCounselorResponse> result = new PageInfo<>(counselorList);
+        for (AdminCounselorResponse adminCounselorResponse : result.getList()) {
+            adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(adminCounselorResponse.getCounselorId()));
+        }
+        return result;
     }
 
 

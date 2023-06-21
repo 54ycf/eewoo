@@ -9,7 +9,7 @@ import java.util.List;
 public class AdminCounselorResponse {
     private Integer counselorId;
     private String name;
-    private String title="咨询师";
+    private String title;
     private String supervisor;
     private Integer supervisorId;
     private Integer sessionCount;

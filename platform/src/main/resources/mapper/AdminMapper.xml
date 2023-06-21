@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eewoo.platform.mapper.AdminMapper">
+
+    <select id="getCounselorList" parameterType="java.lang.String" resultType="com.eewoo.platform.pojo.vo.response.AdminCounselorResponse">
+        SELECT counselor_id, name, title, supervisor, supervisor_id, session_count, session_time, session_score, banned
+        FROM
+            (SELECT uc.id as counselor_id, uc.name as name, uc.title as title, us.name as supervisor, us.id as supervisor_id, uc.banned as banned
+             FROM user_counselor as uc
+                      LEFT JOIN binding ON uc.id=binding.counselor_id
+                      LEFT JOIN user_supervisor as us ON us.id=binding.supervisor_id
+             <where>
+                 <if test='name != null and name != "" '>
+                     uc.name = #{name}
+                 </if>
+             </where>
+            ) AS t1
+        LEFT JOIN
+            (SELECT counselor_id as cid, SUM(`session`.counselor_id) as session_count, SUM(`session`.duration) as session_time, SUM(`session`.visitor_feedback_score)/SUM(`session`.counselor_id) as session_score
+             FROM `session`
+             GROUP BY `session`.counselor_id
+            ) AS t2
+        ON t1.counselor_id = t2.cid
+    </select>
+
+
+</mapper>
