@@ -37,6 +37,9 @@ public class SupervisorController {
 
     /**
      * 获得访客咨询的列表。
+     * 抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃
+     * 督导室不能直接看见访客的信息的
+     * 督导只接受来自咨询师的邀请和管理员分配的信息
      * @return
      */
     @GetMapping("/visitor-list")
@@ -62,12 +65,12 @@ public class SupervisorController {
         return R.ok(bindCounselorResponsePageInfo);
     }
 
-
     /**
      * 得到和自己有聊天记录的咨询师的一个大致的左侧边列表，包含咨询师的名字和邮箱就可以了，
      * 还要咨询师的ID，比较好做进一步的再次请求后端查看详细chat信息，那部分是chat服务负责了。
      * //遇到问题，我们并没有存放counselor和supervissor的表格，先随机返回吧。
      * @return 粗略的最近有聊天记录的咨询师
+     * 废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃废弃
      */
     @GetMapping("/counselor-chat-list")
     public R leftBar()

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 @Service
 public class SupervisorServiceImpl implements SupervisorService {
@@ -70,7 +69,7 @@ public class SupervisorServiceImpl implements SupervisorService {
 //      List<Integer> list1 = new ArrayList<Integer>();
 //      list1.add(1);
 //      list1.add(2);
-      List<BindCounselorResponse> list2 = mapper.getbindcounselors(sup_id);
+      List<BindCounselorResponse> list2 = mapper.getBindcounselors(sup_id);
 
         for (BindCounselorResponse bindCounselorResponse : list2)
         {
@@ -106,7 +105,7 @@ public class SupervisorServiceImpl implements SupervisorService {
     public List<Counselor> findCounselors(FindCounselorMsg fcm) {
 
         if(fcm.getIdCard() != null)
-            return mapper.getCounselorById(Integer.parseInt(fcm.getIdCard()));
+            return mapper.getCounselorById((fcm.getIdCard()));
         if(fcm.getUsername() != null)
             return mapper.getConsounselorsByUsername(fcm.getUsername());
         if(fcm.getName() != null)

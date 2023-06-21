@@ -20,10 +20,9 @@ public interface SupervisorMapper {
     @Select("SELECT id , username, name, banned, profile, phone, email FROM user_counselor ")
     List<CounselorResponse> getCounselors();
 
-
     //bind counselor 's status name ,id but also need session figures
     @Select("SELECT counselor_id ,user_counselor.username FROM binding join user_counselor on binding.counselor_id = user_counselor.id where supervisor_id = #{id} ")
-    List<BindCounselorResponse> getbindcounselors( @Param("id")Integer id );
+    List<BindCounselorResponse> getBindcounselors(@Param("id")Integer id );
 
     @Select("SELECT name FROM user_supervisor WHERE id = #{id}")
     String getName(@Param("id") Integer id);
@@ -37,19 +36,18 @@ public interface SupervisorMapper {
             " FROM user_supervisor WHERE id = #{id}")
     Supervisor getSupervisorInfo(Integer id);
 
-    @Select("SELECT id, username, banned, name, profile, consult_duration_total,consult_cnt_total" +
-            " ,consult_score_total,consult_cnt_today,consult_duration_today,age,id_card,phone,email,work_place,title" +
-            " FROM user_counselor WHERE counselor_id = #{id}")
-    List<Counselor> getCounselorById(@Param("id")Integer idCard);
+    @Select("SELECT id, username, banned, name, profile, age,id_card,phone,email,work_place,title FROM user_counselor WHERE id_card = #{id}")
+    List<Counselor> getCounselorById(@Param("id")String idCard);
 
-    @Select("SELECT id, username, banned, name, profile, consult_duration_total,consult_cnt_total" +
-            " ,consult_score_total,consult_cnt_today,consult_duration_today,age,id_card,phone,email,work_place,title" +
-            " FROM user_counselor WHERE username = #{username}")
+    @Select("SELECT id, username, banned, name, profile, age,id_card,phone,email,work_place,title FROM user_counselor WHERE username = #{username} ")
     List<Counselor> getConsounselorsByUsername(@Param("username")String username);
 
-    @Select("SELECT id, username, banned, name, profile, consult_duration_total,consult_cnt_total" +
-            " ,consult_score_total,consult_cnt_today,consult_duration_today,age,id_card,phone,email,work_place,title" +
-            " FROM user_counselor WHERE name = #{name}")
+    /**
+     * 名字支持模糊查询，username和id是不支持的，这里返回的是列表，ok的
+     * @param name
+     * @return
+     */
+    @Select("SELECT id, username, banned, name, profile, age,id_card,phone,email,work_place,title FROM user_counselor WHERE name like '%#{name}%'")
     List<Counselor> getConsounselorsByName(@Param("name")String name);
 
     @Select("select day_schedule_supervisor.id ,  day_schedule_supervisor.supervisor_id , user_supervisor.username as supervisor_name , day_schedule_supervisor.day ,day_schedule_supervisor.banned from day_schedule_supervisor join user_supervisor on day_schedule_supervisor.supervisor_id =  user_supervisor.id where user_supervisor.id = #{id}")
@@ -57,7 +55,7 @@ public interface SupervisorMapper {
 
     @Select("SELECT schedule_supervisor.id, supervisor_id, username as supervisor_name, weekday " +
             "from schedule_supervisor join user_supervisor " +
-            "on user_supervisor.id =  scheduler_supervisor.supervisor_id " +
+            "on user_supervisor.id =  schedule_supervisor.supervisor_id " +
             "where supervisor_id = #{id}")
     List<ScheduleSupervisorResponse> getSupervisorScheduleByWeek(Integer id);
 }

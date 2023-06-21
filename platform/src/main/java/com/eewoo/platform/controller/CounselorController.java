@@ -41,6 +41,7 @@ public class CounselorController {
 
     /**
      * 获取除密码外的所有字段
+     * 咨询师的个人信息
      * @return
      */
     @GetMapping("/counselor-info")
