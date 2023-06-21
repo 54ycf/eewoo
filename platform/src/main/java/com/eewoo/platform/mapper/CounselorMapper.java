@@ -62,6 +62,8 @@ public interface CounselorMapper {
             "from schedule_counselor join user_counselor on schedule_counselor.counselor_id = user_counselor.id where schedule_counselor.counselor_id = #{id}")
     List<ScheduleCounselorResponse> getPersonalScheduleByWeek(Integer id);
 
-    @Select("select * from schedule_counselor where counselor_id = #{id}")
+    @Select("select day_schedule_counselor.id ,  day_schedule_counselor.counselor_id , user_counselor.username as counselor_name , day_schedule_counselor.day ,day_schedule_counselor.banned from day_schedule_counselor " +
+            "join user_counselor on day_schedule_counselor.counselor_id =  user_counselor.id " +
+            "where user_counselor.id = #{id}")
     List<DayScheduleCounselorResponse> getPersonalScheduleByDay(Integer id);
 }

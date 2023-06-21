@@ -52,7 +52,7 @@ public interface SupervisorMapper {
             " FROM user_counselor WHERE name = #{name}")
     List<Counselor> getConsounselorsByName(@Param("name")String name);
 
-    @Select("SELECT * from day_schedule_supervisor WHERE supervisor_id = #{id}")
+    @Select("select day_schedule_supervisor.id ,  day_schedule_supervisor.supervisor_id , user_supervisor.username as supervisor_name , day_schedule_supervisor.day ,day_schedule_supervisor.banned from day_schedule_supervisor join user_supervisor on day_schedule_supervisor.supervisor_id =  user_supervisor.id where user_supervisor.id = #{id}")
     List<DayScheduleSupervisorResponse> getSupervisorSchedulesByDay(@Param("id") Integer id);
 
     @Select("SELECT schedule_supervisor.id, supervisor_id, username as supervisor_name, weekday " +
