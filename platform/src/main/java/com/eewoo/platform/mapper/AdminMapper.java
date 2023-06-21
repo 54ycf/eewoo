@@ -158,6 +158,5 @@ public interface AdminMapper {
     List<Supervisor> selectSupervisorsByName(String name);
 
 
-
-
+    List<AdminCounselorResponse> getCounselorList(String name);
 }

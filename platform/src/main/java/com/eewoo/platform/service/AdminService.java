@@ -86,4 +86,5 @@ public interface AdminService {
     int reviseBind(BindRequest bindRequest);
 
 
+    PageInfo<AdminCounselorResponse> getCounselorList(Integer page, Integer size, String name);
 }
