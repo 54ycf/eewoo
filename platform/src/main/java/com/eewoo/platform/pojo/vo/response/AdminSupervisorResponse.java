@@ -11,7 +11,7 @@ public class AdminSupervisorResponse {
     private  Integer supervisorId;
     private String name;
     private String profile;
-    private String title="督导";
+    private String identity="督导";
     private List<Counselor> counselors;
     private List<Integer> schedule;
     private Integer banned;
@@ -22,4 +22,5 @@ public class AdminSupervisorResponse {
     private String workPlace;
     private String qualification;
     private String qualificationNumber;
+    private String title;
 }

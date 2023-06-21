@@ -196,6 +196,14 @@ public class AdminServiceImpl implements AdminService {
         DayScheduleCounselorResponse dayScheduleCounselorResponse=null;
         for (int i=0;i<dayScheduleCounselorResponses.size();i++){
             dayScheduleCounselorResponse=dayScheduleCounselorResponses.get(i);
+
+//            System.out.println("########################################################################");
+//            System.out.println("dayScheduleCounselorResponse.getCounselorId(): "+dayScheduleCounselorResponse.getCounselorId());
+//            System.out.println("adminMapper.selectCounselorById().getName(): "+adminMapper.selectCounselorById(
+//                    dayScheduleCounselorResponse.getCounselorId()
+//            ).getName());
+//            System.out.println("#########################################################################");
+
             dayScheduleCounselorResponse.setCounselorName(adminMapper.selectCounselorById(
                     dayScheduleCounselorResponse.getCounselorId()
             ).getName());
@@ -372,6 +380,7 @@ public class AdminServiceImpl implements AdminService {
             adminSupervisorResponse.setQualification(supervisor.getQualification());
             adminSupervisorResponse.setQualificationNumber(supervisor.getQualificationNumber());
             adminSupervisorResponse.setProfile(supervisor.getProfile());
+            adminSupervisorResponse.setTitle(supervisor.getTitle());
             adminSupervisorResponses.add(adminSupervisorResponse);
         }
         PageHelper.startPage(page,pageSize);
@@ -406,6 +415,7 @@ public class AdminServiceImpl implements AdminService {
             adminSupervisorResponse.setQualification(supervisor.getQualification());
             adminSupervisorResponse.setQualificationNumber(supervisor.getQualificationNumber());
             adminSupervisorResponse.setProfile(supervisor.getProfile());
+            adminSupervisorResponse.setTitle(supervisor.getTitle());
             adminSupervisorResponses.add(adminSupervisorResponse);
 
         }

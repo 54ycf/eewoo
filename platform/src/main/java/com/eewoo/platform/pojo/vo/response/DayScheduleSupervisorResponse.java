@@ -7,10 +7,10 @@ import java.util.Date;
 
 @Data
 public class DayScheduleSupervisorResponse {
-    private int id;
-    private int supervisorId;
+    private Integer id;
+    private Integer supervisorId;
     private String supervisorName;
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date day;
-    private int banned;
+    private Integer banned;
 }
