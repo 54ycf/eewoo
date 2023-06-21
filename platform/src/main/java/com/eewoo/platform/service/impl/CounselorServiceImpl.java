@@ -6,6 +6,8 @@ import com.eewoo.common.pojo.User;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.platform.mapper.CounselorMapper;
 import com.eewoo.platform.pojo.vo.response.Consult;
+import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
+import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.SupervisorResponse;
 import com.eewoo.platform.service.CounselorService;
 import com.github.pagehelper.PageHelper;
@@ -24,16 +26,16 @@ public class CounselorServiceImpl implements CounselorService {
 
 
     @Autowired
-    CounselorMapper mapper;
+    CounselorMapper counselorMapper;
 
     @Override
-    public List<Consult> getConsult(Integer page, Integer size) {
+    public PageInfo<Consult> getConsult(Integer page, Integer size) {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer c_id = user.getId();//得到本咨询师聊天的访客的简略会话信息
         PageHelper.startPage(page,size);
-        List<Consult> users = mapper.getAllConsults(c_id);
+        List<Consult> users = counselorMapper.getAllConsults(c_id);
         PageInfo<Consult> pageInfo = new PageInfo<>(users);
-        return pageInfo.getList();
+        return pageInfo;
         /*
          * 通过token获取counselor用户的id，交给mapper层返回符合资格的访客列表
          */
@@ -42,8 +44,8 @@ public class CounselorServiceImpl implements CounselorService {
 
     @Override
     public int createEvaluation(Integer sessionID, String feedback, String type) {
-          mapper.createEvaluation(sessionID, feedback, type);
-          mapper.endSession(sessionID, new Date());
+          counselorMapper.createEvaluation(sessionID, feedback, type);
+          counselorMapper.endSession(sessionID, new Date());
           return 1;
     }
 
@@ -51,7 +53,7 @@ public class CounselorServiceImpl implements CounselorService {
     public SupervisorResponse findSupervisor(Integer counselorId) {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
-        Supervisor info = mapper.findSupervisor(id);
+        Supervisor info = counselorMapper.findSupervisor(id);
         SupervisorResponse supervisorResponse = new SupervisorResponse();
         BeanUtils.copyProperties(info, supervisorResponse);
         return supervisorResponse;
@@ -61,7 +63,7 @@ public class CounselorServiceImpl implements CounselorService {
     public Integer getTotalSessionTime() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
-        return mapper.getTotalSessionTime( id );
+        return counselorMapper.getTotalSessionTime( id );
     }
 
     @Override
@@ -69,14 +71,14 @@ public class CounselorServiceImpl implements CounselorService {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
         Date today =new Date();
-        return mapper.getTodaySessionNum(id,today);
+        return counselorMapper.getTodaySessionNum(id,today);
     }
 
     @Override
     public Integer getTodaySessionTime() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
-        return mapper.getTodaySessionTime(id);
+        return counselorMapper.getTodaySessionTime(id);
 
     }
 
@@ -84,6 +86,22 @@ public class CounselorServiceImpl implements CounselorService {
     public Counselor getAllInfoExceptPassword() {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
-        return mapper.getmassiveInfo(id);
+        return counselorMapper.getmassiveInfo(id);
+    }
+
+    @Override
+    public List<ScheduleCounselorResponse> getCounselorSchedules() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        System.out.println(id);
+        List<ScheduleCounselorResponse> scheduleCounselor = counselorMapper.getPersonalScheduleByWeek(id);
+        return scheduleCounselor;
+    }
+
+    @Override
+    public List<DayScheduleCounselorResponse> getSuperVisorSchedulesByDay() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        return counselorMapper.getPersonalScheduleByDay(id);
     }
 }

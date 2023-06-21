@@ -4,9 +4,7 @@ import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.RoughCouselor;
-import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.CounselorSupervisorResponse;
-import com.eewoo.platform.pojo.vo.response.VisitorResponse;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.pojo.vo.request.FindCounselorMsg;
 import com.eewoo.platform.service.SupervisorService;
 import com.github.pagehelper.PageInfo;
@@ -52,6 +50,7 @@ public class SupervisorController {
 
     /**
      * 获得与本督导具有绑定关系的咨询师的列表 and status。page和size用来分页。
+     * 分页功能已经调通，按照这个模板来调其他的分页功能
      * @param page
      * @param size
      * @return
@@ -97,5 +96,25 @@ public class SupervisorController {
 
     }
 
+    /**获取supervisor的排班(按日期 day)
+     * 和管理员获取的督导排班表不同，这里只是获取本督导一个人的排班表
+     * 对于前端来讲渲染的逻辑是相同的。
+     * **/
+    @GetMapping("/working-schedule/day")
+    public R getWorkingScheduleByDay()
+    {
+        List<DayScheduleSupervisorResponse> dayScheduleSupervisorRespons = superservice.getSuperVisorSchedulesByDay();
+        return R.ok(dayScheduleSupervisorRespons);
+    }
 
+    /**获取supervisor的排班(按星期 week)
+     * 和管理员获取的督导排班表不同，这里只是获取本督导一个人的排班表
+     * 对于前端来讲渲染的逻辑是相同的。
+     * **/
+    @GetMapping("/working-schedule/week")
+    public R getWorkingScheduleByWeek()
+    {
+        List<ScheduleSupervisorResponse> scheduleSupervisorResponses= superservice.getSupervisorSchedules();
+        return R.ok(scheduleSupervisorResponses);
+    }
 }

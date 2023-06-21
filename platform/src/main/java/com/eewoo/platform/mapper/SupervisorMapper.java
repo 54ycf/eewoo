@@ -3,9 +3,7 @@ package com.eewoo.platform.mapper;
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.platform.pojo.RoughCouselor;
-import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.CounselorResponse;
-import com.eewoo.platform.pojo.vo.response.VisitorResponse;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -53,4 +51,13 @@ public interface SupervisorMapper {
             " ,consult_score_total,consult_cnt_today,consult_duration_today,age,id_card,phone,email,work_place,title" +
             " FROM user_counselor WHERE name = #{name}")
     List<Counselor> getConsounselorsByName(@Param("name")String name);
+
+    @Select("SELECT * from day_schedule_supervisor WHERE supervisor_id = #{id}")
+    List<DayScheduleSupervisorResponse> getSupervisorSchedulesByDay(@Param("id") Integer id);
+
+    @Select("SELECT schedule_supervisor.id, supervisor_id, username as supervisor_name, weekday " +
+            "from schedule_supervisor join user_supervisor " +
+            "on user_supervisor.id =  scheduler_supervisor.supervisor_id " +
+            "where supervisor_id = #{id}")
+    List<ScheduleSupervisorResponse> getSupervisorScheduleByWeek(Integer id);
 }
