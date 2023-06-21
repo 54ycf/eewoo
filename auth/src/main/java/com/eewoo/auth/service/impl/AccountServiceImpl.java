@@ -105,6 +105,10 @@ public class AccountServiceImpl implements AccountService {
     public int updateSupervisor(Supervisor supervisor) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         supervisor.setPassword(encoder.encode(supervisor.getPassword()));
+        System.out.println(supervisor.getIdCard());
+        System.out.println(supervisor.getId());
+        System.out.println(supervisor.getEmail());
+        System.out.println(supervisor.getPassword());
         userMapper.updateSupervisor(supervisor);
         return 0;
     }

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -194,14 +196,6 @@ public class AdminServiceImpl implements AdminService {
         DayScheduleCounselorResponse dayScheduleCounselorResponse=null;
         for (int i=0;i<dayScheduleCounselorResponses.size();i++){
             dayScheduleCounselorResponse=dayScheduleCounselorResponses.get(i);
-
-//            System.out.println("########################################################################");
-//            System.out.println("dayScheduleCounselorResponse.getCounselorId(): "+dayScheduleCounselorResponse.getCounselorId());
-//            System.out.println("adminMapper.selectCounselorById().getName(): "+adminMapper.selectCounselorById(
-//                    dayScheduleCounselorResponse.getCounselorId()
-//            ).getName());
-//            System.out.println("#########################################################################");
-
             dayScheduleCounselorResponse.setCounselorName(adminMapper.selectCounselorById(
                     dayScheduleCounselorResponse.getCounselorId()
             ).getName());
@@ -229,6 +223,17 @@ public class AdminServiceImpl implements AdminService {
                 dayScheduleCounselorRequest.getCounselorId(),
                 dayScheduleCounselorRequest.getDay()
         );
+        /**获取该日期对应的星期几**/
+        Date date=dayScheduleCounselorRequest.getDay();
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        Integer weekday=calendar.get(Calendar.DAY_OF_WEEK);
+        /**获取该counselor的排班星期**/
+        List<Integer> schedule=adminMapper.getCounselorScheduleById(dayScheduleCounselorRequest.getCounselorId());
+        /**看星期中是否包含了该日期**/
+        if(schedule.contains(weekday)) {
+            return -1;
+        }
         if(dayScheduleCounselorResponse==null){
             return adminMapper.insertScheduleCounselorByDay(dayScheduleCounselorRequest.getCounselorId(),
                     dayScheduleCounselorRequest.getDay());
@@ -246,7 +251,24 @@ public class AdminServiceImpl implements AdminService {
                 dayScheduleCounselorRequest.getDay()
         );
         if(dayScheduleCounselorResponse==null){
-            return -1;
+            /**获取该日期对应的星期几**/
+            Date date=dayScheduleCounselorRequest.getDay();
+            Calendar calendar=Calendar.getInstance();
+            calendar.setTime(date);
+            Integer weekday=calendar.get(Calendar.DAY_OF_WEEK);
+            /**获取该counselor的排班星期**/
+            List<Integer> schedule=adminMapper.getCounselorScheduleById(dayScheduleCounselorRequest.getCounselorId());
+            /**看星期中是否包含了该日期**/
+            if(schedule.contains(weekday)){
+                /**如果包含了先增加再删除**/
+                adminMapper.insertScheduleCounselorByDay(dayScheduleCounselorRequest.getCounselorId(),
+                        dayScheduleCounselorRequest.getDay());
+                adminMapper.deleteScheduleCounselorByDay(dayScheduleCounselorRequest.getCounselorId(),
+                        dayScheduleCounselorRequest.getDay());
+                return 1;
+            }else {
+                return -1;
+            }
         }
         return adminMapper.deleteScheduleCounselorByDay(
                 dayScheduleCounselorRequest.getCounselorId(),
@@ -260,6 +282,14 @@ public class AdminServiceImpl implements AdminService {
                 dayScheduleSupervisorRequest.getSupervisorId(),
                 dayScheduleSupervisorRequest.getDay()
         );
+        Date date=dayScheduleSupervisorRequest.getDay();
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        Integer weekday=calendar.get(Calendar.DAY_OF_WEEK);
+        List<Integer> schedule=adminMapper.getSupervisorScheduleById(dayScheduleSupervisorRequest.getSupervisorId());
+        if(schedule.contains(weekday)){
+            return -1;
+        }
         if(dayScheduleSupervisorResponse==null){
             return adminMapper.insertScheduleSupervisorByDay(
                     dayScheduleSupervisorRequest.getSupervisorId(),
@@ -279,7 +309,20 @@ public class AdminServiceImpl implements AdminService {
                 dayScheduleSupervisorRequest.getDay()
         );
         if(dayScheduleSupervisorResponse==null){
-            return -1;
+            Date date=dayScheduleSupervisorRequest.getDay();
+            Calendar calendar=Calendar.getInstance();
+            calendar.setTime(date);
+            Integer weekday=calendar.get(Calendar.DAY_OF_WEEK);
+            List<Integer> schedule=adminMapper.getSupervisorScheduleById(dayScheduleSupervisorRequest.getSupervisorId());
+            if(schedule.contains(weekday)){
+                adminMapper.insertScheduleSupervisorByDay(dayScheduleSupervisorRequest.getSupervisorId(),
+                        dayScheduleSupervisorRequest.getDay());
+                adminMapper.deleteScheduleSupervisorByDay(dayScheduleSupervisorRequest.getSupervisorId(),
+                        dayScheduleSupervisorRequest.getDay());
+                return 1;
+            }else {
+                return -1;
+            }
         }
         return adminMapper.deleteScheduleSupervisorByDay(
                 dayScheduleSupervisorRequest.getSupervisorId(),

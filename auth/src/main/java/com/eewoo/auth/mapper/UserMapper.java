@@ -44,7 +44,7 @@ public interface UserMapper {
     int updateCounselor(Counselor counselor);
 
     @Update("UPDATE user_supervisor SET " +
-            "username=#{username},password=#{password},name=#{name},age=#{age},id_card=#{idCard},phone={phone},email=#{email},work_place=#{workPlace},title=#{title},qualification=#{qualification},qualification_number=#{qualificationNumber " +
+            "username=#{username},password=#{password},name=#{name},age=#{age},id_card=#{idCard},phone=#{phone},email=#{email},work_place=#{workPlace},title=#{title},qualification=#{qualification},qualification_number=#{qualificationNumber} " +
             "WHERE id = #{id}")
     int updateSupervisor(Supervisor supervisor);
 //    User test1(Integer id);
