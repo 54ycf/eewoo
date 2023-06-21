@@ -310,6 +310,7 @@ public class AdminServiceImpl implements AdminService {
             adminCounselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
             adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(counselor.getId()));
             adminCounselorResponse.setBanned(counselor.getBanned());
+            adminCounselorResponse.setProfile(counselor.getProfile());
             adminCounselorResponses.add(adminCounselorResponse);
         }
         System.out.println("null: "+adminCounselorResponses);
@@ -336,6 +337,7 @@ public class AdminServiceImpl implements AdminService {
             adminCounselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
             adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(counselor.getId()));
             adminCounselorResponse.setBanned(counselor.getBanned());
+            adminCounselorResponse.setProfile(counselor.getProfile());
             adminCounselorResponses.add(adminCounselorResponse);
         }
         PageHelper.startPage(page,pageSize);
@@ -362,6 +364,14 @@ public class AdminServiceImpl implements AdminService {
             adminSupervisorResponse.setCounselors(counselors);
             adminSupervisorResponse.setSchedule(adminMapper.getSupervisorScheduleById(supervisor.getId()));
             adminSupervisorResponse.setBanned(supervisor.getBanned());
+            adminSupervisorResponse.setAge(supervisor.getAge());
+            adminSupervisorResponse.setIdCard(supervisor.getIdCard());
+            adminSupervisorResponse.setPhone(supervisor.getPhone());
+            adminSupervisorResponse.setEmail(supervisor.getEmail());
+            adminSupervisorResponse.setWorkPlace(supervisor.getWorkPlace());
+            adminSupervisorResponse.setQualification(supervisor.getQualification());
+            adminSupervisorResponse.setQualificationNumber(supervisor.getQualificationNumber());
+            adminSupervisorResponse.setProfile(supervisor.getProfile());
             adminSupervisorResponses.add(adminSupervisorResponse);
         }
         PageHelper.startPage(page,pageSize);
@@ -388,6 +398,14 @@ public class AdminServiceImpl implements AdminService {
             adminSupervisorResponse.setCounselors(counselors);
             adminSupervisorResponse.setSchedule(adminMapper.getSupervisorScheduleById(supervisor.getId()));
             adminSupervisorResponse.setBanned(supervisor.getBanned());
+            adminSupervisorResponse.setAge(supervisor.getAge());
+            adminSupervisorResponse.setIdCard(supervisor.getIdCard());
+            adminSupervisorResponse.setPhone(supervisor.getPhone());
+            adminSupervisorResponse.setEmail(supervisor.getEmail());
+            adminSupervisorResponse.setWorkPlace(supervisor.getWorkPlace());
+            adminSupervisorResponse.setQualification(supervisor.getQualification());
+            adminSupervisorResponse.setQualificationNumber(supervisor.getQualificationNumber());
+            adminSupervisorResponse.setProfile(supervisor.getProfile());
             adminSupervisorResponses.add(adminSupervisorResponse);
 
         }

@@ -1,6 +1,7 @@
 package com.eewoo.platform.service.impl;
 
 import com.eewoo.common.pojo.Counselor;
+import com.eewoo.common.util.R;
 import com.eewoo.platform.mapper.AdminMapper;
 import com.eewoo.platform.pojo.model.Session;
 import com.eewoo.common.pojo.User;
@@ -16,6 +17,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.eewoo.platform.feign.ChatFeign;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.*;
 
@@ -26,6 +30,14 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Autowired
     AdminMapper adminMapper;
+
+    @Autowired
+    ChatFeign chatFeign;
+
+    String getToken(){
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("token");
+    }
+
 
     /**获取访客信息**/
     @Override
@@ -44,12 +56,20 @@ public class VisitorServiceImpl implements VisitorService {
         List<Counselor> counselors= visitorMapper.getCounselors();
         List<CounselorResponse> counselorResponses=new ArrayList<>();
         Counselor counselor=null;
+        R r = chatFeign.getOnlineCounselorIds(getToken());
+        if( r == null)
+            throw new RuntimeException("Remote call failed");
+        List  list1 = (List)r.getData();
         for (int i=0;i<counselors.size();i++){
             CounselorResponse counselorResponse=new CounselorResponse();
             counselor=counselors.get(i);
             BeanUtils.copyProperties(counselor,counselorResponse);
             counselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
             counselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
+            if(list1.contains(counselor.getId())){
+                counselorResponse.setStatus(1);
+            }
+
             counselorResponses.add(counselorResponse);
         }
         return counselorResponses;
@@ -62,12 +82,19 @@ public class VisitorServiceImpl implements VisitorService {
         Integer id = user.getId();
         List<SessionResponse> sessionResponses=visitorMapper.getSessions(id);
         Set<CounselorResponse> counselorResponses=new HashSet<>();
+        R r = chatFeign.getOnlineCounselorIds(getToken());
+        if( r == null)
+            throw new RuntimeException("Remote call failed");
+        List  list1 = (List)r.getData();
         for (int i=0;i<sessionResponses.size();i++){
             Counselor counselor= visitorMapper.getHistoryCounselor(sessionResponses.get(i).getCounselorId());
             CounselorResponse counselorResponse=new CounselorResponse();
             BeanUtils.copyProperties(counselor,counselorResponse);
             counselorResponse.setSessionCount(adminMapper.selectSessionCountById(counselor.getId()));
             counselorResponse.setSessionScore(adminMapper.countAvgSessionScoreById(counselor.getId()));
+            if(list1.contains(counselor.getId())){
+                counselorResponse.setStatus(1);
+            }
             counselorResponses.add(counselorResponse);
         }
         return new ArrayList<>(counselorResponses);

@@ -10,8 +10,16 @@ import java.util.List;
 public class AdminSupervisorResponse {
     private  Integer supervisorId;
     private String name;
+    private String profile;
     private String title="督导";
     private List<Counselor> counselors;
     private List<Integer> schedule;
     private Integer banned;
+    private Integer age;
+    private String idCard;
+    private String phone;
+    private String email;
+    private String workPlace;
+    private String qualification;
+    private String qualificationNumber;
 }

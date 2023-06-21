@@ -27,5 +27,6 @@ public class CounselorResponse {
     String title;
     Integer sessionCount;
     Double sessionScore;
+    Integer status=0;
 
 }
