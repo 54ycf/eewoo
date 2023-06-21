@@ -4,9 +4,7 @@ import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.platform.pojo.RoughCouselor;
 import com.eewoo.platform.pojo.vo.request.FindCounselorMsg;
-import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.CounselorResponse;
-import com.eewoo.platform.pojo.vo.response.VisitorResponse;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.github.pagehelper.PageInfo;
 
 
@@ -25,4 +23,8 @@ public interface SupervisorService {
     Supervisor getSupervisorInfo();
 
     List<Counselor> findCounselors(FindCounselorMsg fcm);
+
+    List<DayScheduleSupervisorResponse> getSuperVisorSchedulesByDay();
+
+    List<ScheduleSupervisorResponse> getSupervisorSchedules();
 }

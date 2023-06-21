@@ -4,10 +4,12 @@ import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.User;
 import com.eewoo.common.util.R;
+import com.eewoo.platform.pojo.vo.request.DayScheduleCounselorRequest;
 import com.eewoo.platform.pojo.vo.request.c_Evaluation;
-import com.eewoo.platform.pojo.vo.response.Consult;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.service.CounselorService;
 import com.eewoo.platform.utils.ZipUtils;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -60,10 +62,10 @@ public class CounselorController {
     public R getConsultList(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
                             @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
     {
-        List<Consult> list = counselorService.getConsult(page, size);
+        PageInfo<Consult> list = counselorService.getConsult(page, size);
         if(list!= null)
         {
-            if(list.size() >0)
+            if(list.getList().size() >0)
                 return R.ok(list);
             else //没有大小说明没有人
                 return R.err("200","暂无已经咨询的用户");
@@ -128,6 +130,30 @@ public class CounselorController {
     public R giveVisitorComment(@RequestBody CounselorCommentRequest commentRequest){
         counselorService.createEvaluation(commentRequest.getSessionId(), commentRequest.getFeedback(), commentRequest.getType());
         return R.ok();
+    }
+
+
+    /**获取counselor的排班(按日期 day)
+     * 和管理员获取的咨询师排班表不同，这里只是获取本咨询师一个人的排班表
+     * 对于前端来讲渲染的逻辑是相同的。
+     * **/
+    @GetMapping("/working-schedule/day")
+    public R getWorkingScheduleByDay()
+    {
+        List<DayScheduleCounselorResponse> dayScheduleSupervisorRespons = counselorService.getSuperVisorSchedulesByDay();
+        return R.ok(dayScheduleSupervisorRespons);
+    }
+
+    /**获取counselor的排班(按星期 week)
+     * 和管理员获取的咨询师排班表不同，这里只是获取本咨询师一个人的排班表
+     * 对于前端来讲渲染的逻辑是相同的。
+     * 就算是weekday返回的也是一个list，可能一个人也有多个星期数，不能只返回一个星期数
+     * **/
+    @GetMapping("/working-schedule/week")
+    public R getWorkingScheduleByWeek()
+    {
+        List<ScheduleCounselorResponse> scheduleSupervisorResponses= counselorService.getCounselorSchedules();
+        return R.ok(scheduleSupervisorResponses);
     }
 
 }

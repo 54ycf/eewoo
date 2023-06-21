@@ -8,9 +8,7 @@ import com.eewoo.platform.feign.ChatFeign;
 import com.eewoo.platform.mapper.SupervisorMapper;
 import com.eewoo.platform.pojo.RoughCouselor;
 import com.eewoo.platform.pojo.vo.request.FindCounselorMsg;
-import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.CounselorResponse;
-import com.eewoo.platform.pojo.vo.response.VisitorResponse;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.service.SupervisorService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -65,14 +63,13 @@ public class SupervisorServiceImpl implements SupervisorService {
     public PageInfo<BindCounselorResponse> bindCounselorsList(Integer page, Integer size) {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer sup_id = user.getId();
-
-//        R r = chatFeign.getOnlineCounselorIds(getToken());
-//        if( r == null)
-//            throw new RuntimeException("Remote call failed");
-//        List  list1 = (List)r.getData();
-      List<Integer> list1 = new ArrayList<Integer>();
-      list1.add(1);
-      list1.add(2);
+        R r = chatFeign.getOnlineCounselorIds(getToken());
+        if( r == null)
+            throw new RuntimeException("Remote call failed");
+        List  list1 = (List)r.getData();
+//      List<Integer> list1 = new ArrayList<Integer>();
+//      list1.add(1);
+//      list1.add(2);
       List<BindCounselorResponse> list2 = mapper.getbindcounselors(sup_id);
 
         for (BindCounselorResponse bindCounselorResponse : list2)
@@ -116,6 +113,24 @@ public class SupervisorServiceImpl implements SupervisorService {
             return mapper.getConsounselorsByName(fcm.getName());
 
         return null;
+    }
+
+    @Override
+    public List<DayScheduleSupervisorResponse> getSuperVisorSchedulesByDay() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        return mapper.getSupervisorSchedulesByDay(id);
+    }
+
+    @Override
+    public List<ScheduleSupervisorResponse> getSupervisorSchedules() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+
+        List<ScheduleSupervisorResponse> schedule = mapper.getSupervisorScheduleByWeek(id);
+
+        return schedule;
+
     }
 
 
