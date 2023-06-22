@@ -103,14 +103,12 @@ public class SupervisorServiceImpl implements SupervisorService {
 
     @Override
     public List<Counselor> findCounselors(FindCounselorMsg fcm) {
-
-        if(fcm.getIdCard() != null)
-            return mapper.getCounselorById((fcm.getIdCard()));
         if(fcm.getUsername() != null)
             return mapper.getConsounselorsByUsername(fcm.getUsername());
         if(fcm.getName() != null)
             return mapper.getConsounselorsByName(fcm.getName());
-
+        if(fcm.getIdCard() != null)
+            return mapper.getCounselorById((fcm.getIdCard()));
         return null;
     }
 
