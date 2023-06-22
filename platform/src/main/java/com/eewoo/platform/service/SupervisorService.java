@@ -27,4 +27,6 @@ public interface SupervisorService {
     List<DayScheduleSupervisorResponse> getSuperVisorSchedulesByDay();
 
     List<ScheduleSupervisorResponse> getSupervisorSchedules();
+
+    PageInfo<SupervisorAidSession> getSupervisorAidSession(Integer page, Integer size);
 }
