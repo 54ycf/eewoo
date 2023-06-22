@@ -14,10 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -477,9 +475,13 @@ public class AdminServiceImpl implements AdminService {
         PageHelper.startPage(page, size);
         List<AdminCounselorResponse> counselorList  = adminMapper.getCounselorList(name);
         PageInfo<AdminCounselorResponse> result = new PageInfo<>(counselorList);
-        for (AdminCounselorResponse adminCounselorResponse : result.getList()) {
-            adminCounselorResponse.setSchedule(adminMapper.getCounselorScheduleById(adminCounselorResponse.getCounselorId()));
-        }
+        result.getList().forEach(item -> {
+            if (item.getScheduleListStr() != null) {
+                item.setSchedule(Arrays.stream(item.getScheduleListStr().split(",")).map(Integer::parseInt).collect(Collectors.toList()));
+            } else {
+                item.setSchedule(new ArrayList<>());
+            }
+        });
         return result;
     }
 

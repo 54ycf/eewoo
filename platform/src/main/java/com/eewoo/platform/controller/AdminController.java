@@ -203,17 +203,8 @@ public class AdminController {
     public R getCounselorByName(@RequestParam(name = "name", required = false) String name,
                                 @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
                                 @RequestParam(name = "size", required = false, defaultValue = "20")Integer size){
-        PageInfo<AdminCounselorResponse> adminCounselorResponses=null;
-
-        System.out.println(page + " " + size);
         PageInfo<AdminCounselorResponse> counselorList = adminService.getCounselorList(page, size, name);
         return R.ok(counselorList);
-//        if(name==null || name.length()<1){
-//            adminCounselorResponses= adminService.getCounselorsWithoutSupervi(page,size);
-//            return R.ok(adminCounselorResponses);
-//        }
-//        adminCounselorResponses= adminService.getCounselorByName(name,page,size);
-//        return R.ok(adminCounselorResponses);
     }
 
     /**修改咨询师和督导的绑定关系**/
