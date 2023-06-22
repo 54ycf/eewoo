@@ -87,4 +87,6 @@ public interface AdminService {
 
 
     PageInfo<AdminCounselorResponse> getCounselorList(Integer page, Integer size, String name);
+
+    PageInfo<AdminSupervisorResponse> getSupervisorList(Integer page,Integer size, String name);
 }

@@ -159,4 +159,10 @@ public interface AdminMapper {
 
 
     List<AdminCounselorResponse> getCounselorList(String name);
+
+    List<AdminSupervisorResponse> getSupervisorList(String name);
+
+    List<Counselor> getCounselorsByBind(Integer supervisorId);
+
+
 }
