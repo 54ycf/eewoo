@@ -28,7 +28,7 @@ public interface SupervisorMapper {
     String getName(@Param("id") Integer id);
 
     //遇到问题，我们并没有存放counselor和supervisor的表格，先随机返回吧。
-    @Select("SELECT name,counselor.id counselor.profile FROM banned join user_supervisor join user_counselor WHERE supervisor.id = #{id}")
+    @Select("SELECT name,counselor.id, counselor.profile FROM banned join user_supervisor join user_counselor WHERE supervisor.id = #{id}")
     List<RoughCouselor> latelyChatCounselors(Integer id);
 
     @Select("SELECT  id,username,banned,name,profile,consult_duration_total,consult_cnt_today, consult_duration_today, age, id_card, phone, email, work_place" +

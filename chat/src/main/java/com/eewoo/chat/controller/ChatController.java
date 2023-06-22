@@ -69,8 +69,6 @@ public class ChatController {
         chatService.counselorComment(counselorComment);
         return R.ok();
     }
-
-
     /**
      * 咨询师联系督导
      * @param chatToken 是访客发送给咨询师的chatToken！

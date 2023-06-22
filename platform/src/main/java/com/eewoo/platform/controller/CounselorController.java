@@ -100,7 +100,7 @@ public class CounselorController {
         if (time != null)
             return R.ok(time);
         else
-            return R.err("code =500", "error");
+            return R.ok(0);
     }
 
     /**
@@ -111,13 +111,16 @@ public class CounselorController {
     public R getTodayConsultsTime() {
         Integer time = counselorService.getTodaySessionTime();
         if (time != null)
+        {
             return R.ok(time);
+        }
         else
-            return R.err("code =500", "error");
+            return R.ok(0);
     }
 
     /**
      * 当前会话总数功能在chat那里，需要提供service接口。
+     * 由chat的service负责
      */
 
 
