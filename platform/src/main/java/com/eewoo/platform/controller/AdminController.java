@@ -136,13 +136,35 @@ public class AdminController {
 
     /**删除督导排班(按星期)**/
     @PutMapping("/schedule/week/supervisor/delete")
-    public R removeCounselorScheduleByWeek(@RequestBody ScheduleSupervisorRequest scheduleSupervisorRequest){
+    public R removeSupervisorScheduleByWeek(@RequestBody ScheduleSupervisorRequest scheduleSupervisorRequest){
         int ok=adminService.removeSupervisorSchedule(scheduleSupervisorRequest);
         if(ok>0){
             return R.ok("移除成功！");
         }
         return R.err("-1","移除失败！");
     }
+
+    /**更新咨询师排班(按星期)**/
+    @PutMapping("/schedule/week/counselor/update")
+    public R updateCounselorScheduleByWeek(@RequestBody ScheduleCounselorUpdateRequest scheduleCounselorUpdateRequest){
+        int ok=adminService.updateCounselorSchedule(scheduleCounselorUpdateRequest);
+        if(ok>0){
+            return R.ok("更新成功！");
+        }
+        return R.err("-1","更新失败！");
+    }
+
+    /**更新督导排班(按星期)**/
+    @PutMapping("/schedule/week/supervisor/update")
+    public R updateSupervisorScheduleByWeek(@RequestBody ScheduleSupervisorUpdateRequest scheduleSupervisorUpdateRequest){
+        int ok=adminService.updateSupervisorSchedule(scheduleSupervisorUpdateRequest);
+        if(ok>0){
+            return R.ok("更新成功！");
+        }
+        return R.err("-1","更新失败！");
+    }
+
+
 
     /**获取咨询师的排班(按日期)**/
     @GetMapping("/schedule/day/counselor")

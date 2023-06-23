@@ -50,6 +50,24 @@
         WHERE binding.supervisor_id=#{supervisorId}
     </select>
 
+    <insert id="batchInsertCounselorSchedule" parameterType="java.util.Map">
+        INSERT INTO schedule_counselor (counselor_id,weekday)
+        VALUES 
+        <foreach collection="values" item="value" separator=",">
+            (#{counselorId},#{value})
+        </foreach>
+    </insert>
+
+
+    <insert id="batchInsertSupervisorSchedule" parameterType="java.util.Map">
+        INSERT INTO schedule_supervisor (supervisor_id,weekday)
+        VALUES
+        <foreach collection="values" item="value" separator=",">
+            (#{supervisorId},#{value})
+        </foreach>
+    </insert>
+
+
 
 
 

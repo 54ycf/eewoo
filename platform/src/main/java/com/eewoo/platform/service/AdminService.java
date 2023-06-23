@@ -51,6 +51,13 @@ public interface AdminService {
     /**删除督导排班(按星期)**/
     int removeSupervisorSchedule(ScheduleSupervisorRequest scheduleSupervisorRequest);
 
+    /**更新咨询师排班(按星期)**/
+    int updateCounselorSchedule(ScheduleCounselorUpdateRequest scheduleCounselorUpdateRequest);
+
+    /**更新督导排班(按星期)**/
+    int updateSupervisorSchedule(ScheduleSupervisorUpdateRequest scheduleSupervisorUpdateRequest );
+
+
     /**获取咨询师排班(按日期)**/
     List<DayScheduleCounselorResponse> getCounselorSchedulesByDay();
 

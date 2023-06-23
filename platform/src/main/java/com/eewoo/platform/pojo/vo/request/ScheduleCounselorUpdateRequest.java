@@ -1,12 +1,11 @@
 package com.eewoo.platform.pojo.vo.request;
 
-
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ScheduleCounselorRequest {
+public class ScheduleCounselorUpdateRequest {
     private int counselorId;
-    private int weekday;
+    private List<Integer> weekdays;
 }

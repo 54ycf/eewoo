@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Mapper
@@ -163,6 +165,16 @@ public interface AdminMapper {
     List<AdminSupervisorResponse> getSupervisorList(String name);
 
     List<Counselor> getCounselorsByBind(Integer supervisorId);
+
+    @Delete("Delete from schedule_counselor where counselor_id=#{counselorId}")
+    int batchDeleteCounselorSchedule(Integer counselorId);
+
+    int batchInsertCounselorSchedule(Map<String,Object> map);
+
+    @Delete("Delete from schedule_supervisor where supervisor_id=#{supervisorId}")
+    int batchDeleteSupervisorSchedule(Integer supervisorId);
+
+    int batchInsertSupervisorSchedule(Map<String,Object> map);
 
 
 }

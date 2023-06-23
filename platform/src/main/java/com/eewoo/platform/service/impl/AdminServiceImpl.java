@@ -14,10 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -188,6 +185,36 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.deleteScheduleSupervisor(scheduleSupervisorRequest.getSupervisorId(),
                 scheduleSupervisorRequest.getWeekday());
     }
+
+
+    /**更新咨询师排班(按星期)**/
+    @Override
+    public int updateCounselorSchedule(ScheduleCounselorUpdateRequest scheduleCounselorUpdateRequest) {
+        int ok1=adminMapper.batchDeleteCounselorSchedule(scheduleCounselorUpdateRequest.getCounselorId());
+        Map<String,Object> map=new HashMap<>();
+        map.put("counselorId",scheduleCounselorUpdateRequest.getCounselorId());
+        map.put("values",scheduleCounselorUpdateRequest.getWeekdays());
+        int ok2=adminMapper.batchInsertCounselorSchedule(map);
+        if(ok1>0 && ok2>0){
+            return 1;
+        }
+        return 0;
+    }
+
+    /**更新督导排班(按星期)**/
+    @Override
+    public int updateSupervisorSchedule(ScheduleSupervisorUpdateRequest scheduleSupervisorUpdateRequest) {
+        int ok1=adminMapper.batchDeleteSupervisorSchedule(scheduleSupervisorUpdateRequest.getSupervisorId());
+        Map<String,Object> map=new HashMap<>();
+        map.put("supervisorId",scheduleSupervisorUpdateRequest.getSupervisorId());
+        map.put("values",scheduleSupervisorUpdateRequest.getWeekdays());
+        int ok2=adminMapper.batchInsertSupervisorSchedule(map);
+        if(ok1>0 && ok2>0){
+            return 1;
+        }
+        return 0;
+    }
+
 
     /**获取咨询师排班表(按日期)**/
     @Override
