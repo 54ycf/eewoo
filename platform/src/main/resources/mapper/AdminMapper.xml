@@ -31,5 +31,32 @@
         ON t1.counselor_id = t3.cid
     </select>
 
+    <select id="getSupervisorList" parameterType="java.lang.String" resultType="com.eewoo.platform.pojo.vo.response.AdminSupervisorResponse">
+        SELECT supervisor_id, name, profile, banned, session_count, session_time, age, id_card, phone, email, work_place, qualification, qualification_number, title
+        FROM
+            (SELECT us.id as supervisor_id, us.name as name, us.profile as profile, us.banned as banned, us.age as age, us.id_card as id_card, us.phone as phone, us.email as email, us.work_place as work_place, us.qualification as qualification, us.qualification_number as qualification_number, us.title as title
+            FROM user_supervisor as us
+            <where>
+                <if test='name !=null and name != "" '>
+                    us.name = #{name}
+                </if>
+            </where>
+        ) AS t1
+    LEFT JOIN
+        (SELECT supervisor_id as sid, SUM(session_sc.supervisor_id) as session_count, SUM(session_sc.duration) as session_time
+        FROM session_sc
+        GROUP BY session_sc.supervisor_id
+        ) AS t2
+    ON t1.supervisor_id=t2.sid
+    </select>
+
+    <select id="getCounselorsByBind" parameterType="java.lang.Integer" resultType="com.eewoo.common.pojo.Counselor">
+        SELECT *
+        FROM user_counselor as uc LEFT JOIN binding ON uc.id=binding.counselor_id
+        WHERE binding.supervisor_id=#{supervisorId}
+    </select>
+
+
+
 
 </mapper>

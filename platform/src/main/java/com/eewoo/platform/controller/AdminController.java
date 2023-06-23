@@ -58,12 +58,14 @@ public class AdminController {
                             @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
                             @RequestParam(name = "size", required = false, defaultValue = "20")Integer size){
         PageInfo<AdminSupervisorResponse> adminSupervisorResponses=null;
-        if(name==null || name.length()<1){
-            adminSupervisorResponses=adminService.getSupervisorsWithoutCounsel(page,size);
-            return R.ok(adminSupervisorResponses);
-        }
-        adminSupervisorResponses=adminService.getSupervisorByName(name,page,size);
-        return R.ok(adminSupervisorResponses);
+        PageInfo<AdminSupervisorResponse> supervisorList=adminService.getSupervisorList(page,size,name);
+        return R.ok(supervisorList);
+//        if(name==null || name.length()<1){
+//            adminSupervisorResponses=adminService.getSupervisorsWithoutCounsel(page,size);
+//            return R.ok(adminSupervisorResponses);
+//        }
+//        adminSupervisorResponses=adminService.getSupervisorByName(name,page,size);
+//        return R.ok(adminSupervisorResponses);
 
     }
 

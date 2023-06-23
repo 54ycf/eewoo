@@ -485,5 +485,17 @@ public class AdminServiceImpl implements AdminService {
         return result;
     }
 
+    @Override
+    public PageInfo<AdminSupervisorResponse> getSupervisorList(Integer page, Integer size, String name) {
+        PageHelper.startPage(page,size);
+        List<AdminSupervisorResponse> supervisorList= adminMapper.getSupervisorList(name);
+        PageInfo<AdminSupervisorResponse> result=new PageInfo<>(supervisorList);
+        for (AdminSupervisorResponse adminSupervisorResponse:result.getList()){
+            adminSupervisorResponse.setCounselors(adminMapper.getCounselorsByBind(adminSupervisorResponse.getSupervisorId()));
+            adminSupervisorResponse.setSchedule(adminMapper.getSupervisorScheduleById(adminSupervisorResponse.getSupervisorId()));
+        }
+        return result;
+    }
+
 
 }

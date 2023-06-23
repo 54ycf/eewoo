@@ -15,6 +15,9 @@ public class AdminSupervisorResponse {
     private List<Counselor> counselors;
     private List<Integer> schedule;
     private Integer banned;
+    private Integer sessionCount;
+    private Integer sessionTime;
+
     private Integer age;
     private String idCard;
     private String phone;
