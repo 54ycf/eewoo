@@ -158,9 +158,9 @@ public class ChatServiceImpl implements ChatService {
         String counselorName = user.getUsername();
 
         //TODO platformFeign.getSupervisor();
-        R r = platformFeign.getSupervisor(getToken());
-        if (r==null) return false;
-        Supervisor supervisor = ((Supervisor) r.getData());
+        R<Supervisor> r0 = platformFeign.getSupervisor(getToken());
+        if (r0==null) return false;
+        Supervisor supervisor = r0.getData();
         String supervisorKey = "s:" + supervisor.getId();
         String supervisorName = supervisor.getUsername();
 
@@ -171,9 +171,9 @@ public class ChatServiceImpl implements ChatService {
         sessionRequest.setCounselorId(Integer.parseInt(counselorKey.substring(2)));
         sessionRequest.setSupervisorId(Integer.parseInt(supervisorKey.substring(2)));
         sessionRequest.setStartTime(new Date());
-        r = platformFeign.createSCSession(sessionRequest, getToken());//TODO
-        if (r==null) return false;
-        Integer sessionId = (Integer) r.getData();// 可以正式发起新的会话，得到的SC之间的sessionId
+        R<Integer> r1 = platformFeign.createSCSession(sessionRequest, getToken());//TODO
+        if (r1==null) return false;
+        Integer sessionId = (Integer) r1.getData();// 可以正式发起新的会话，得到的SC之间的sessionId
         String counselorChatToken = genChatToken(counselorKey, counselorName, supervisorKey, supervisorName, sessionId);
         String supervisorChatToken = genChatToken(supervisorKey, supervisorName, counselorKey, counselorName, sessionId);
 
