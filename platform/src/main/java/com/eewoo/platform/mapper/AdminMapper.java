@@ -75,6 +75,9 @@ public interface AdminMapper {
     @Update("update binding set supervisor_id=#{supervisorId} where counselor_id=#{counselorId}")
     int updateBind(Integer counselorId,Integer supervisorId);
 
+    @Insert("Insert into binding (counselor_id,supervisor_id) values (#{counselorId},#{supervisorId})")
+    int insertBind(Integer counselorId,Integer supervisorId);
+
     @Select("Select * from day_schedule_counselor")
     List<DayScheduleCounselorResponse> getCounselorSchedulesByDay();
 

@@ -499,8 +499,14 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public int reviseBind(BindRequest bindRequest) {
-        return adminMapper.updateBind(bindRequest.getCounselorId(),
+        Integer id=adminMapper.selectSuperviIdByBind(bindRequest.getCounselorId());
+        if(id!=null && id>0){
+            return adminMapper.updateBind(bindRequest.getCounselorId(),
+                    bindRequest.getSupervisorId());
+        }
+        return adminMapper.insertBind(bindRequest.getCounselorId(),
                 bindRequest.getSupervisorId());
+
     }
 
     @Override
