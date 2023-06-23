@@ -6,8 +6,6 @@ import com.eewoo.chat.pojo.VisitorComment;
 import com.eewoo.chat.pojo.Chat;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -23,7 +21,7 @@ public interface ChatService {
 
     boolean callSupervisor(String chatToken);
 
-    void endCSSession(String chatToken);
+    void endSCSession(String chatToken);
 
     Integer getChatsNum();
 

@@ -3,10 +3,12 @@ package com.eewoo.chat.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.eewoo.chat.pojo.*;
 import com.eewoo.chat.service.ChatService;
-import com.eewoo.chat.pojo.Chat;
+import com.eewoo.chat.service.StoreChatSCService;
 import com.eewoo.chat.service.StoreChatService;
 import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
+import com.eewoo.common.pojo.vo.request.SessionSCRequest;
 import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.pojo.vo.request.VisitorCommentRequest;
 import com.eewoo.common.util.R;
@@ -15,16 +17,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.eewoo.chat.feign.PlatformFeign;
-import com.eewoo.chat.pojo.ChatInfo;
-import com.eewoo.chat.pojo.CounselorComment;
-import com.eewoo.chat.pojo.SR;
-import com.eewoo.chat.pojo.VisitorComment;
 import com.eewoo.chat.service.ChatScheduler;
 import com.eewoo.chat.socket.WebSocketServer;
 import com.eewoo.common.pojo.Supervisor;
@@ -37,13 +32,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -57,6 +48,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Autowired
     StoreChatService storeChatService;
+    @Autowired
+    StoreChatSCService storeChatSCService;
 
     String getToken(){
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("token");
@@ -103,9 +96,9 @@ public class ChatServiceImpl implements ChatService {
         WebSocketServer.chatMap.remove(receiverKey+"->"+senderKey);
 
         //存储进mongo
-        Chat chat = WebSocketServer.sessionChatMap.get(senderChatInfo.getSessionId());
+        Chat chat = WebSocketServer.sessionIdChatMap.get(senderChatInfo.getSessionId());
         storeChatService.save(chat);
-        WebSocketServer.sessionChatMap.remove(senderChatInfo.getSessionId()); //聊天记录从内存删除
+        WebSocketServer.sessionIdChatMap.remove(senderChatInfo.getSessionId()); //聊天记录从内存删除
 
         //通知两方会话已结束，请进行评价
         WebSocketServer.sendMessage(SR.commentNotify(senderChatToken), WebSocketServer.sessionMap.get(senderKey));
@@ -159,45 +152,79 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public boolean callSupervisor(String chatToken) {
-        //TODO 请造假
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer counselorId = user.getId();
         String counselorKey = "c:" + counselorId;
+        String counselorName = user.getUsername();
 
         //TODO platformFeign.getSupervisor();
-        Supervisor supervisor = new Supervisor();
+        R r = platformFeign.getSupervisor(getToken());
+        if (r==null) return false;
+        Supervisor supervisor = ((Supervisor) r.getData());
         String supervisorKey = "s:" + supervisor.getId();
+        String supervisorName = supervisor.getUsername();
 
         if (!WebSocketServer.sessionMap.containsKey(supervisorKey))
             return false;
 
-        Session supervisorSession = WebSocketServer.sessionMap.get(supervisorKey);
-        Session counselorSession = WebSocketServer.sessionMap.get(counselorKey);
-//        String counselorChatToken = genChatToken(counselorKey, supervisorKey, null);
-//        String supervisorChatToken = genChatToken(supervisorKey, counselorKey, null);
-//        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, supervisorKey), supervisorSession);
-//        WebSocketServer.sendMessage(SR.chatToken(supervisorChatToken, counselorKey), counselorSession);
-//        WebSocketServer.chatMap.put(counselorKey + "->" + supervisorKey, counselorChatToken);
-//        WebSocketServer.chatMap.put(supervisorKey + "->" + counselorKey, supervisorChatToken);
+        SessionSCRequest sessionRequest = new SessionSCRequest();
+        sessionRequest.setCounselorId(Integer.parseInt(counselorKey.substring(2)));
+        sessionRequest.setSupervisorId(Integer.parseInt(supervisorKey.substring(2)));
+        sessionRequest.setStartTime(new Date());
+        r = platformFeign.createCSSession(sessionRequest, getToken());//TODO
+        if (r==null) return false;
+        Integer sessionId = (Integer) r.getData();// 可以正式发起新的会话，得到的SC之间的sessionId
+        String counselorChatToken = genChatToken(counselorKey, counselorName, supervisorKey, supervisorName, sessionId);
+        String supervisorChatToken = genChatToken(supervisorKey, supervisorName, counselorKey, counselorName, sessionId);
+
+        //聊天记录内存暂存
+        ChatSC chatSC = new ChatSC();
+        chatSC.setId(Long.valueOf(sessionId));
+        chatSC.setParticipants(Lists.newArrayList(supervisorName, counselorName));
+        WebSocketServer.sessionIdChatSCMap.put(sessionId, chatSC);
+
+        ChatInfo chatInfo = WebSocketServer.tokenInfoMap.get(chatToken);
+        Integer baseSessionId = chatInfo.getSessionId();
+
+        //通过webSocket将token发给各自，告诉访客和哪个咨询师的chatToken已经有了，告诉咨询师和哪个访客的chatToken已经有了
+        WebSocketServer.sendMessage(SR.chatTokenSC(supervisorChatToken, counselorKey, counselorName, baseSessionId, sessionId), WebSocketServer.sessionMap.get(supervisorKey));
+        WebSocketServer.sendMessage(SR.chatTokenSC(counselorChatToken, supervisorKey, supervisorName, baseSessionId, sessionId), WebSocketServer.sessionMap.get(counselorKey));
+
+        //转发映射
+        WebSocketServer.forwardMap.put(baseSessionId, WebSocketServer.sessionMap.get(supervisorKey));
+        WebSocketServer.ididMap.put(baseSessionId, sessionId);
+
+        Chat chat = WebSocketServer.sessionIdChatMap.get(baseSessionId);
+        if (chat != null) { //把访客-咨询师之间的此次的聊天转发过来先
+            WebSocketServer.sendMessage(SR.msgInit(chat.getMessages(), sessionId), WebSocketServer.sessionMap.get(supervisorKey));
+        }
 
         return true;
     }
 
     @Override
-    public void endCSSession(String senderChatToken) {
+    public void endSCSession(String senderChatToken) {
         //主动发起结束一方的信息
         ChatInfo senderChatInfo = WebSocketServer.tokenInfoMap.get(senderChatToken);
 
-        //移除chatToken
-        String senderKey = senderChatInfo.getSenderKey();
-        String receiverKey = senderChatInfo.getReceiverKey();
+        Integer key = null;
+        for (Map.Entry<Integer, Integer> integerIntegerEntry : WebSocketServer.ididMap.entrySet()) {
+            key = integerIntegerEntry.getKey();
+            Integer value = integerIntegerEntry.getValue();
+            if (value.equals(senderChatInfo.getSessionId())) {
+                break;
+            }
+        }
+        if (key!=null){
+            WebSocketServer.ididMap.remove(key);
+            WebSocketServer.sessionIdChatSCMap.remove(key);
+        }
 
-        //移除chatMap
-        WebSocketServer.chatMap.remove(senderKey+"->"+receiverKey);
-        WebSocketServer.chatMap.remove(receiverKey+"->"+senderKey);
-        //移除chatTokenMap
-        WebSocketServer.tokenInfoMap.remove(senderKey);
-        WebSocketServer.tokenInfoMap.remove(receiverKey);
+        ChatSC chatSC = WebSocketServer.sessionIdChatSCMap.get(senderChatInfo.getSessionId());
+        storeChatSCService.save(chatSC);
+        WebSocketServer.sessionIdChatSCMap.remove(senderChatInfo.getSessionId()); //聊天记录从内存删除
+
+        platformFeign.endSCSession(senderChatInfo.getSessionId(), getToken());
     }
 
     @Override
@@ -295,11 +322,11 @@ public class ChatServiceImpl implements ChatService {
         Chat chat = new Chat();
         chat.setId(Long.valueOf(sessionId));
         chat.setParticipants(Lists.newArrayList(visitorName, counselorName));
-        WebSocketServer.sessionChatMap.put(sessionId, chat);
+        WebSocketServer.sessionIdChatMap.put(sessionId, chat);
 
         //通过webSocket将token发给各自，告诉访客和哪个咨询师的chatToken已经有了，告诉咨询师和哪个访客的chatToken已经有了
-        WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey, counselorName), WebSocketServer.sessionMap.get(visitorKey));
-        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, visitorKey, visitorName), WebSocketServer.sessionMap.get(counselorKey));
+        WebSocketServer.sendMessage(SR.chatToken(visitorChatToken, counselorKey, counselorName, sessionId), WebSocketServer.sessionMap.get(visitorKey));
+        WebSocketServer.sendMessage(SR.chatToken(counselorChatToken, visitorKey, visitorName, sessionId), WebSocketServer.sessionMap.get(counselorKey));
         //二者之间建立会话
         WebSocketServer.chatMap.put(visitorKey+"->"+counselorKey, visitorChatToken);
         WebSocketServer.chatMap.put(counselorKey+"->"+visitorKey, counselorChatToken);
@@ -336,8 +363,7 @@ public class ChatServiceImpl implements ChatService {
     }
     @Data
     @AllArgsConstructor
-    static
-    class ZipItem{
+    static class ZipItem{
         byte[] txtFileBytes;
         Integer sessionId;
     }

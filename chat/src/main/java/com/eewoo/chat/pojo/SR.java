@@ -1,8 +1,10 @@
 package com.eewoo.chat.pojo;
 
+import com.eewoo.common.pojo.Message;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,22 +25,34 @@ public class SR {
         return response;
     }
 
-    public static SR img(String url, String from){
+    public static SR msgInit(List<Message> messageList, Integer sessionId){
         SR response = new SR();
-        response.setType("img");
-        Map<String, String> map = new HashMap<>();
-        map.put("url", url);
-        map.put("from", from);
+        response.setType("messageSCInit");
+        Map<String, Object> map = new HashMap<>();
+        map.put("messageList", messageList);
+        map.put("sessionId", sessionId);
         response.setData(map);
         return response;
     }
 
-    public static SR voice(String url, String from){
+    public static SR msgSC(String content, String from, Integer sessionId){
         SR response = new SR();
-        response.setType("voice");
+        response.setType("messageSC");
         Map<String, String> map = new HashMap<>();
-        map.put("url", url);
+        map.put("content", content);
         map.put("from", from);
+        map.put("sessionId", String.valueOf(sessionId));
+        response.setData(map);
+        return response;
+    }
+
+    public static SR forward(String content, String from, Integer sessionId) {
+        SR response = new SR();
+        response.setType("forward");
+        Map<String, String> map = new HashMap<>();
+        map.put("content", content);
+        map.put("from", from);
+        map.put("sessionId", String.valueOf(sessionId));
         response.setData(map);
         return response;
     }
@@ -67,13 +81,27 @@ public class SR {
         return response;
     }
 
-    public static SR chatToken(String chatToken, String toUserKey/*v:1*/, String toUsername){
+    public static SR chatToken(String chatToken, String toUserKey/*v:1*/, String toUsername, Integer sessionId){
         SR response = new SR();
         response.setType("chatToken");
         Map<String, String> map = new HashMap<>();
         map.put("chatToken", chatToken);
         map.put("toUserKey", toUserKey);
         map.put("toUserName", toUsername);
+        map.put("sessionId", String.valueOf(sessionId));
+        response.setData(map);
+        return response;
+    }
+
+    public static SR chatTokenSC(String chatToken, String toUserKey/*v:1*/, String toUsername, Integer baseSessionId, Integer sessionId){
+        SR response = new SR();
+        response.setType("chatTokenSC");
+        Map<String, String> map = new HashMap<>();
+        map.put("chatToken", chatToken);
+        map.put("toUserKey", toUserKey);
+        map.put("toUserName", toUsername);
+        map.put("baseSessionId", String.valueOf(baseSessionId));
+        map.put("sessionId", String.valueOf(sessionId));
         response.setData(map);
         return response;
     }
