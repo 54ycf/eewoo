@@ -1,5 +1,6 @@
 package com.eewoo.chat.feign;
 
+import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
 import com.eewoo.common.pojo.vo.request.SessionRequest;
 import com.eewoo.common.pojo.vo.request.SessionSCRequest;
@@ -20,7 +21,7 @@ public interface PlatformFeign {
     R giveVisitorComment(@RequestBody CounselorCommentRequest counselorCommentRequest,  @RequestHeader String token);
 
     @GetMapping("/counselor/get-supervisor")
-    R getSupervisor(@RequestHeader String token);
+    R<Supervisor> getSupervisor(@RequestHeader String token);
 
     @PostMapping("/counselor/consult")
     R createSCSession(@RequestBody SessionSCRequest sessionRequest, @RequestHeader String token);
