@@ -35,6 +35,28 @@ public class SupervisorController {
             return R.err("500","服务器内部错误");
     }
 
+
+    /**
+     * 督导查看自己绑定的咨询师的求助记录，时长之类的消息，这个功能还要支持导出和查看详情
+     * 导出功能可以复用前面咨询师导出访客的那个
+     * 查看详情感觉需要联系到mongoDB那边，查看详细的聊天信息
+     * 这边使用的是：session_sc表
+     */
+
+    @GetMapping("/aid-session")
+    public R getAidSession(@RequestParam(name = "page", required = false, defaultValue = "5") Integer page,
+                           @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
+    {
+        PageInfo<SupervisorAidSession> supervisorAidSession = superservice.getSupervisorAidSession(page, size);
+        if(supervisorAidSession.getList().size() > 0)
+        {
+            return R.ok(supervisorAidSession);
+        }
+        else
+        {
+            return R.err("500","未找到任何访客记录");
+        }
+    }
     /**
      * 获得访客咨询的列表。
      * 抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃抛弃
@@ -59,7 +81,8 @@ public class SupervisorController {
      * @return
      */
     @PostMapping("/counsult-record/table")
-    public R bindconuselors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
+    public R bindconuselors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                            @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
     {
         PageInfo<BindCounselorResponse> bindCounselorResponsePageInfo = superservice.bindCounselorsList(page, size);
         return R.ok(bindCounselorResponsePageInfo);

@@ -130,5 +130,16 @@ public class SupervisorServiceImpl implements SupervisorService {
 
     }
 
+    @Override
+    public PageInfo<SupervisorAidSession> getSupervisorAidSession(Integer page, Integer size) {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        String username = user.getUsername();
+        PageHelper.startPage(page,size);
+        List<SupervisorAidSession> list = mapper.fetchSupervisorAidSession(id,username);
+        PageInfo<SupervisorAidSession> pageInfo = new PageInfo<>(list);
+        return pageInfo;
+    }
+
 
 }

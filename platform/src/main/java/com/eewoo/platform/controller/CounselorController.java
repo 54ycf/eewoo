@@ -118,7 +118,7 @@ public class CounselorController {
             return R.ok(0);
     }
 
-    /**
+    /*****
      * 当前会话总数功能在chat那里，需要提供service接口。
      * 由chat的service负责
      */
