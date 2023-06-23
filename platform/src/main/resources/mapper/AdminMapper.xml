@@ -73,8 +73,31 @@
         </foreach>
     </insert>
 
+    <select id="getVisitors" parameterType="java.lang.String" resultType="com.eewoo.common.pojo.Visitor">
+        SELECT *
+        FROM user_visitor AS uv
+        <where>
+            <if test=' name!=null and name!="" '>
+                uv.name=#{name}
+            </if>
+        </where>
+    </select>
 
-
-
+    <select id="getSessions" parameterType="java.util.Map" resultType="com.eewoo.platform.pojo.vo.response.SessionResponse">
+        SELECT s.id AS id, s.visitor_id AS visitorId, uv.name AS visitorName, s.counselor_id AS counselorId,
+               uc.name AS counselorName, s.start_time AS startTime, s.end_time AS endTime, s.duration AS duration,
+               s.visitor_feedback AS visitorFeedback, s.visitor_feedback_score AS visitorFeedbackScore,
+               s.counselor_feedback AS counselorFeedback, s.type AS type
+        FROM `session` AS s
+        RIGHT JOIN user_visitor AS uv ON s.visitor_id=uv.id
+        LEFT JOIN user_counselor AS uc ON s.counselor_id=uc.id
+        WHERE 1=1
+        <if test='visitorName!=null and visitorName!=""'>
+            AND uv.name=#{visitorName}
+        </if>
+        <if test=' startDate!=null and startDate!="" '>
+            AND DATE(s.start_time)=#{startDate}
+        </if>
+    </select>
 
 </mapper>

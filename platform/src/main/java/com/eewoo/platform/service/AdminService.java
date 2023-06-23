@@ -6,6 +6,7 @@ import com.eewoo.platform.pojo.vo.response.*;
 import com.github.pagehelper.PageInfo;
 
 
+import java.util.Date;
 import java.util.List;
 
 public interface AdminService {
@@ -15,7 +16,7 @@ public interface AdminService {
 
 
     /**获取咨询记录**/
-    PageInfo<SessionResponse> getSessions(Integer page, Integer pageSize);
+    PageInfo<SessionResponse> getSessions(Integer page, Integer pageSize, String name, String date);
 
 
     /**获取咨询师**/
@@ -28,7 +29,7 @@ public interface AdminService {
     int removeCounselor(Integer id);
 
     /**获取访客**/
-    PageInfo<VisitorResponse> getVistors(Integer page,Integer pageSize);
+    PageInfo<VisitorResponse> getVistors(Integer page,Integer pageSize,String name);
 
     /**得到咨询数量最高的咨询师**/
     List<CounselorResponse> getTopSessions();

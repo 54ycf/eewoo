@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Date;
 import java.util.List;
 
 @PreAuthorize("hasAuthority('a')")
@@ -47,8 +48,11 @@ public class AdminController {
     }
 
     @GetMapping("/consul_records")
-    public R getSessions(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
-        PageInfo<SessionResponse> sessionResponses=adminService.getSessions(page,size);
+    public R getSessions(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                         @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+                         @RequestParam(name = "name", required = false) String name,
+                         @RequestParam(name = "date", required = false) String date){
+        PageInfo<SessionResponse> sessionResponses=adminService.getSessions(page,size,name,date);
         return R.ok(sessionResponses);
     }
 
@@ -81,8 +85,12 @@ public class AdminController {
 
     /**获取访客**/
     @GetMapping("/visitor")
-    public R getVisitors(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "20") Integer size){
-        PageInfo<VisitorResponse> visitorResponses=adminService.getVistors(page, size);
+    public R getVisitors(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "page", required = false, defaultValue = "1")Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "20")Integer size
+    ){
+        PageInfo<VisitorResponse> visitorResponses=adminService.getVistors(page, size,name);
         return R.ok(visitorResponses);
     }
 

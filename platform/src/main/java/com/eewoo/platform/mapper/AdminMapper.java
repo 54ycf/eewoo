@@ -15,11 +15,11 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface AdminMapper {
-    @Select("Select s.id as id, s.visitor_id as visitorId, uv.name as visitorName, s.counselor_id as counselorId, uc.name as counselorName, s.start_time as startTime, s.end_time as endTime, s.duration as duration, s.visitor_feedback as visitorFeedback, s.visitor_feedback_score as visitorFeedbackScore, s.counselor_feedback as counselorFeedback, s.type as type " +
-            "from session as s " +
-            "right join user_visitor as uv on s.visitor_id=uv.id " +
-            "left join user_counselor as uc on s.counselor_id=uc.id")
-    List<SessionResponse> getSessions();
+//    @Select("Select s.id as id, s.visitor_id as visitorId, uv.name as visitorName, s.counselor_id as counselorId, uc.name as counselorName, s.start_time as startTime, s.end_time as endTime, s.duration as duration, s.visitor_feedback as visitorFeedback, s.visitor_feedback_score as visitorFeedbackScore, s.counselor_feedback as counselorFeedback, s.type as type " +
+//            "from session as s " +
+//            "right join user_visitor as uv on s.visitor_id=uv.id " +
+//            "left join user_counselor as uc on s.counselor_id=uc.id")
+    List<SessionResponse> getSessions(Map<String,Object> map);
 
     @Select("Select uc.id  as counselorId, uc.username as counselorUsername, uc.banned as counselorBanned, uc.name  as counselorName, " +
             "uc.profile  as counselorProfile, " +
@@ -40,8 +40,8 @@ public interface AdminMapper {
     @Delete("Delete from user_counselor where id=#{id}")
     int deleteCounselor(Integer id);
 
-    @Select("Select * from user_visitor")
-    List<Visitor> getVisitors();
+    //@Select("Select * from user_visitor")
+    List<Visitor> getVisitors(String name);
 
     //咨询数量排行
 

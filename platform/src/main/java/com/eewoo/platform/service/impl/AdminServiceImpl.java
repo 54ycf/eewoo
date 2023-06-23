@@ -44,9 +44,12 @@ public class AdminServiceImpl implements AdminService {
      * 获取咨询记录
      * **/
     @Override
-    public PageInfo<SessionResponse> getSessions(Integer page,Integer pageSize) {
+    public PageInfo<SessionResponse> getSessions(Integer page,Integer pageSize,String name,String date) {
         PageHelper.startPage(page, pageSize);
-        List<SessionResponse> sessionResponses = adminMapper.getSessions();
+        Map<String,Object> map=new HashMap<>();
+        map.put("visitorName",name);
+        map.put("startDate",date);
+        List<SessionResponse> sessionResponses = adminMapper.getSessions(map);
         PageInfo<SessionResponse> pageInfo = new PageInfo<>(sessionResponses);
         return pageInfo;
     }
@@ -87,9 +90,9 @@ public class AdminServiceImpl implements AdminService {
 
     /**得到访客**/
     @Override
-    public PageInfo<VisitorResponse> getVistors(Integer page,Integer pageSize) {
+    public PageInfo<VisitorResponse> getVistors(Integer page,Integer pageSize,String name) {
         PageHelper.startPage(page,pageSize);
-        List<Visitor> visitors= adminMapper.getVisitors();
+        List<Visitor> visitors= adminMapper.getVisitors(name);
         List<VisitorResponse> visitorResponses=new ArrayList<>();
         for (int i=0;i<visitors.size();i++){
             VisitorResponse visitorResponse=new VisitorResponse();

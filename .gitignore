@@ -3,6 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+files/
+
 auth/target
 chat/target
 common/target
