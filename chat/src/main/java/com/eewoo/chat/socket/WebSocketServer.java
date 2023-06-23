@@ -2,10 +2,7 @@ package com.eewoo.chat.socket;
 
 import com.alibaba.fastjson.JSON;
 import com.eewoo.chat.feign.AuthFeign;
-import com.eewoo.chat.pojo.Chat;
-import com.eewoo.chat.pojo.ChatInfo;
-import com.eewoo.chat.pojo.MessageSend;
-import com.eewoo.chat.pojo.SR;
+import com.eewoo.chat.pojo.*;
 import com.eewoo.chat.service.ChatScheduler;
 import com.eewoo.common.pojo.Message;
 import com.eewoo.common.security.LoginUser;
@@ -51,10 +48,14 @@ public class WebSocketServer {
 //    public static final Set<String> chatSet = new ConcurrentHashSet<>();
 
     //sessionId -> chat
-    public static final Map<Integer, Chat> sessionChatMap = new ConcurrentHashMap<>();
+    public static final Map<Integer, Chat> sessionIdChatMap = new ConcurrentHashMap<>();
+    //sessionId -> chatSC
+    public static final Map<Integer, ChatSC> sessionIdChatSCMap = new ConcurrentHashMap<>();
 
-    //用于转发
-    public static final Map<String, Session> relayMap = new ConcurrentHashMap<>();
+    //用于转发 baseSessionId -> supervisor:Session
+    public static final Map<Integer, Session> forwardMap = new ConcurrentHashMap<>();
+    //baseSessionId -> sessionId
+    public static final Map<Integer, Integer> ididMap = new ConcurrentHashMap<>();
 
     /**
      * 连接建立成功调用的方法
@@ -121,13 +122,18 @@ public class WebSocketServer {
             sendMessage(SR.err("对方已离线"), session); //告诉发送者没有成功
             return;
         }
-        sendMessage(SR.msg(msg.getContent(), chatInfo.getSenderKey()), sendTo);
         if (!chatInfo.getSenderKey().startsWith("s") && !chatInfo.getReceiverKey().startsWith("s")){ //只有访客-咨询师
+            sendMessage(SR.msg(msg.getContent(), chatInfo.getSenderKey()), sendTo);
             ChatScheduler.updateTime(chatToken);//更新chatToken时间
-            sessionChatMap.get(chatInfo.getSessionId()).getMessages().add(new Message(chatInfo.getSenderName(),chatInfo.getReceiverName(),msg.getContent(),new Date().toString()));//聊天记录先存在内存，加一条
+            sessionIdChatMap.get(chatInfo.getSessionId()).getMessages().add(new Message(chatInfo.getSenderName(),chatInfo.getReceiverName(),msg.getContent(),new Date().toString()));//聊天记录先存在内存，加一条
+            if (forwardMap.containsKey(chatInfo.getSessionId())) {//说明请求了督导，有东西
+                WebSocketServer.sendMessage(SR.forward(msg.getContent(), chatInfo.getSenderKey(), ididMap.get(chatInfo.getSessionId())), forwardMap.get(chatInfo.getSessionId()));
+            }
+        }else {
+            //咨询师-督导聊天
+            sendMessage(SR.msgSC(msg.getContent(), chatInfo.getSenderKey(), chatInfo.getSessionId()), sendTo);
+            sessionIdChatSCMap.get(chatInfo.getSessionId()).getMessages().add(new Message(chatInfo.getSenderName(), chatInfo.getReceiverName(), msg.getContent(), new Date().toString()));
         }
-        // TODO 聊天转发
-
     }
 
     @OnError

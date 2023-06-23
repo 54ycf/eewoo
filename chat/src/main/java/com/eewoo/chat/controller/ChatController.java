@@ -91,7 +91,7 @@ public class ChatController {
      */
     @GetMapping("end-cs-session")
     public R endCSSession(@RequestParam String chatToken){
-        chatService.endCSSession(chatToken);
+        chatService.endSCSession(chatToken);
         return R.ok();
     }
 
