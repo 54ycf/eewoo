@@ -5,7 +5,7 @@
 <mapper namespace="com.eewoo.platform.mapper.AdminMapper">
 
     <select id="getCounselorList" parameterType="java.lang.String" resultType="com.eewoo.platform.pojo.vo.response.AdminCounselorResponse">
-        SELECT counselor_id, name, title, supervisor, supervisor_id, session_count, session_time, session_score, banned, age, id_card, phone, email, work_place
+        SELECT counselor_id, name, title, supervisor, supervisor_id, session_count, session_time, session_score, banned, age, id_card, phone, email, work_place, schedule_list_str
         FROM
              (SELECT uc.id as counselor_id, uc.name as name, uc.title as title, us.name as supervisor, us.id as supervisor_id, uc.banned as banned, uc.age as age, uc.id_card as id_card, uc.phone as phone, uc.email as email, uc.work_place as work_place
              FROM user_counselor as uc
@@ -23,6 +23,12 @@
              GROUP BY `session`.counselor_id
             ) AS t2
         ON t1.counselor_id = t2.cid
+        LEFT JOIN
+            (SELECT GROUP_CONCAT(weekday) AS schedule_list_str, counselor_id AS cid
+            FROM schedule_counselor
+            GROUP BY counselor_id
+            ) AS t3
+        ON t1.counselor_id = t3.cid
     </select>
 
     <select id="getSupervisorList" parameterType="java.lang.String" resultType="com.eewoo.platform.pojo.vo.response.AdminSupervisorResponse">

@@ -17,6 +17,7 @@ public class AdminCounselorResponse {
     private Integer sessionTime;
     private Double sessionScore;
     private List<Integer> schedule;
+    private String scheduleListStr;
     private Integer banned;
 
     private Integer age;
