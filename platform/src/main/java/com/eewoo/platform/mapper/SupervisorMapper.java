@@ -8,7 +8,10 @@ import com.eewoo.platform.pojo.vo.response.BindCounselorResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -62,4 +65,11 @@ public interface SupervisorMapper {
     @Select("select #{username} as supervisor_name , supervisor_id, user_counselor.username as counselor_name, counselor_id, start_time, end_time, duration from session_sc join user_counselor on session_sc.counselor_id = user_counselor.id where supervisor_id = #{id} ")
     List<SupervisorAidSession> fetchSupervisorAidSession(Integer id, String username);
     //传入督导的名字，减少join一张不必要的督导账户表格了
+
+    @Update("update session_sc set end_time = #{date}, duration = #{duration} where id = #{sessionId} ")
+    void endSCSessionInMapper(Integer sessionId, Date date, int duration);
+
+
+    @Select("select start_time from session_sc where id = #{sessionId}")
+    Date getStartTimeById(Integer sessionId);
 }

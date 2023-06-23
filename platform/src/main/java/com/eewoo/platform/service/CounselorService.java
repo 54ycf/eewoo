@@ -1,5 +1,7 @@
 package com.eewoo.platform.service;
 import com.eewoo.common.pojo.Counselor;
+import com.eewoo.common.pojo.Supervisor;
+import com.eewoo.common.pojo.vo.request.SessionSCRequest;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
@@ -33,4 +35,9 @@ public interface CounselorService {
     List<ScheduleCounselorResponse> getCounselorSchedules();
 
     List<DayScheduleCounselorResponse> getSuperVisorSchedulesByDay();
+
+    Supervisor getBindSupervisor();
+
+
+    Integer createSCSessionAndFetchID(SessionSCRequest sessionSCRequest);
 }

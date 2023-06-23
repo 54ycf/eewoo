@@ -23,7 +23,7 @@ public interface PlatformFeign {
     R getSupervisor(@RequestHeader String token);
 
     @PostMapping("/counselor/consult")
-    R createCSSession(@RequestBody SessionSCRequest sessionRequest, @RequestHeader String token);
+    R createSCSession(@RequestBody SessionSCRequest sessionRequest, @RequestHeader String token);
 
     @GetMapping("/supervisor/end-sc-session")
     R endSCSession(@RequestParam Integer sessionId, @RequestHeader String token);

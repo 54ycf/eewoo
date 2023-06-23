@@ -2,6 +2,7 @@ package com.eewoo.platform.mapper;
 
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Supervisor;
+import com.eewoo.platform.pojo.model.SessionSC;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
@@ -65,4 +66,13 @@ public interface CounselorMapper {
             "join user_counselor on day_schedule_counselor.counselor_id =  user_counselor.id " +
             "where user_counselor.id = #{id}")
     List<DayScheduleCounselorResponse> getPersonalScheduleByDay(Integer id);
+
+    @Select("Select binding.supervisor_id as id, user_supervisor.username from binding join user_supervisor on user_supervisor.id  = binding.supervisor_id where binding.counselor_id = #{id}")
+    Supervisor getSupervisor(Integer id);
+
+    @Insert("INSERT INTO session_sc (supervisor_id, counselor_id,start_time) VALUES (#{supervisorId},#{counselorId},#{startTime})")
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
+    Integer insertSCSession(SessionSC session);
+
+
 }

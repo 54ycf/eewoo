@@ -171,7 +171,7 @@ public class ChatServiceImpl implements ChatService {
         sessionRequest.setCounselorId(Integer.parseInt(counselorKey.substring(2)));
         sessionRequest.setSupervisorId(Integer.parseInt(supervisorKey.substring(2)));
         sessionRequest.setStartTime(new Date());
-        r = platformFeign.createCSSession(sessionRequest, getToken());//TODO
+        r = platformFeign.createSCSession(sessionRequest, getToken());//TODO
         if (r==null) return false;
         Integer sessionId = (Integer) r.getData();// 可以正式发起新的会话，得到的SC之间的sessionId
         String counselorChatToken = genChatToken(counselorKey, counselorName, supervisorKey, supervisorName, sessionId);

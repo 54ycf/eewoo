@@ -29,4 +29,6 @@ public interface SupervisorService {
     List<ScheduleSupervisorResponse> getSupervisorSchedules();
 
     PageInfo<SupervisorAidSession> getSupervisorAidSession(Integer page, Integer size);
+
+    void endSCSession(Integer sessionId);
 }

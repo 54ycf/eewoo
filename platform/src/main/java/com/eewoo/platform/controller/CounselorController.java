@@ -3,6 +3,7 @@ package com.eewoo.platform.controller;
 import com.eewoo.common.pojo.vo.request.CounselorCommentRequest;
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.User;
+import com.eewoo.common.pojo.vo.request.SessionSCRequest;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.pojo.vo.request.DayScheduleCounselorRequest;
 import com.eewoo.platform.pojo.vo.request.c_Evaluation;
@@ -38,6 +39,25 @@ public class CounselorController {
 //        counselorService.createEvaluation(eva.getSessionId(), eva.getCounselorFeedback(),eva.getType());
 //        return R.ok();
 //    }
+
+
+    /**
+     * counselor and supervisor session creation
+     * all staff maninupulation here
+     */
+
+    @GetMapping("/get-supervisor")
+    R getSupervisor()
+    {
+        return R.ok(counselorService.getBindSupervisor());
+    }
+
+    @PostMapping("/consult")
+    R createSCSession(@RequestBody SessionSCRequest sessionRequest)
+    {
+        Integer sessionId = counselorService.createSCSessionAndFetchID(sessionRequest);
+        return R.ok(sessionId);
+    }
 
     /**
      * 获取除密码外的所有字段
@@ -161,6 +181,7 @@ public class CounselorController {
     }
 
 }
+
 /**
  * 这两个任务在CounselorServiceImpl供Chat服务模块调用，不在本Controller做路由
  * 1.咨询师填写会话评价内容

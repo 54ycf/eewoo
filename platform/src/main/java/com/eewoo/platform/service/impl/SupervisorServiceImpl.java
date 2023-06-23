@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Date;
 import java.util.List;
 @Service
 public class SupervisorServiceImpl implements SupervisorService {
@@ -139,6 +140,17 @@ public class SupervisorServiceImpl implements SupervisorService {
         List<SupervisorAidSession> list = mapper.fetchSupervisorAidSession(id,username);
         PageInfo<SupervisorAidSession> pageInfo = new PageInfo<>(list);
         return pageInfo;
+    }
+
+    @Override
+    public void endSCSession(Integer sessionId) {
+        Date endTime = new Date();
+
+        Date startTime = mapper.getStartTimeById(sessionId);
+        long duration = (startTime.getTime() - endTime.getTime())/(1000*60);
+
+        mapper.endSCSessionInMapper(sessionId,endTime,Integer.parseInt(String.valueOf(duration)));
+
     }
 
 

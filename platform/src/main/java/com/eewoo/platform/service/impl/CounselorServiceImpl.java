@@ -3,8 +3,10 @@ package com.eewoo.platform.service.impl;
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.pojo.User;
+import com.eewoo.common.pojo.vo.request.SessionSCRequest;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.platform.mapper.CounselorMapper;
+import com.eewoo.platform.pojo.model.SessionSC;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
@@ -103,5 +105,25 @@ public class CounselorServiceImpl implements CounselorService {
         User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Integer id = user.getId();
         return counselorMapper.getPersonalScheduleByDay(id);
+    }
+
+    @Override
+    public Supervisor getBindSupervisor() {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        return counselorMapper.getSupervisor(id);
+    }
+
+    @Override
+    public Integer createSCSessionAndFetchID(SessionSCRequest sessionSCRequest) {
+//        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+//        Integer counselor_id = user.getId();// get counselor's id here
+        // reference to visitor's service layer to learn something
+        SessionSC session = new SessionSC();
+        BeanUtils.copyProperties(sessionSCRequest,session);
+        if(counselorMapper.insertSCSession(session) == 1)
+            return session.getId();
+        else
+            return -1;
     }
 }

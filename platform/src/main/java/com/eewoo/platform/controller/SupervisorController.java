@@ -35,6 +35,15 @@ public class SupervisorController {
             return R.err("500","服务器内部错误");
     }
 
+    /**
+     * end Converssation with counselor and update the session_sc table
+     */
+    @GetMapping("/end-sc-session")
+    R endSCSession(@RequestParam Integer sessionId)
+    {
+           superservice.endSCSession(sessionId);
+           return R.ok();
+    }
 
     /**
      * 督导查看自己绑定的咨询师的求助记录，时长之类的消息，这个功能还要支持导出和查看详情
