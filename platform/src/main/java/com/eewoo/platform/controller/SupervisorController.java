@@ -54,17 +54,22 @@ public class SupervisorController {
 
     @GetMapping("/aid-session")
     public R getAidSession(@RequestParam(name = "page", required = false, defaultValue = "5") Integer page,
-                           @RequestParam(name = "size", required = false, defaultValue = "20") Integer size)
+                           @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+                           @RequestParam(name = "name", required = false) String name,
+                           @RequestParam(name = "date", required = false) String date)
     {
-        PageInfo<SupervisorAidSession> supervisorAidSession = superservice.getSupervisorAidSession(page, size);
-        if(supervisorAidSession.getList().size() > 0)
-        {
-            return R.ok(supervisorAidSession);
-        }
-        else
-        {
-            return R.err("500","未找到任何访客记录");
-        }
+
+//        PageInfo<SupervisorAidSession> supervisorAidSession = superservice.getSupervisorAidSession(page, size);
+        PageInfo<SessionSCResponse> sessionResponses=superservice.getSessions(page,size,name,date);
+        return R.ok(sessionResponses);
+//        if(supervisorAidSession.getList().size() > 0)
+//        {
+//            return R.ok(supervisorAidSession);
+//        }
+//        else
+//        {
+//            return R.err("500","未找到任何访客记录");
+//        }
     }
     /**
      * 获得访客咨询的列表。
