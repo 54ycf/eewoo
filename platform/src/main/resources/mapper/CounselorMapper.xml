@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="com.eewoo.platform.mapper.CounselorMapper">
+
+    <select id="getSessions" parameterType="java.util.Map" resultType="com.eewoo.platform.pojo.vo.response.SessionResponse">
+        SELECT s.id AS id, s.visitor_id AS visitorId, uv.name AS visitorName, s.counselor_id AS counselorId,
+        uc.name AS counselorName, s.start_time AS startTime, s.end_time AS endTime, s.duration AS duration,
+        s.visitor_feedback AS visitorFeedback, s.visitor_feedback_score AS visitorFeedbackScore,
+        s.counselor_feedback AS counselorFeedback, s.type AS type
+        FROM `session` AS s
+        RIGHT JOIN user_visitor AS uv ON s.visitor_id=uv.id
+        LEFT JOIN user_counselor AS uc ON s.counselor_id=uc.id
+        WHERE uc.id = #{counselorId}
+        <if test='visitorName!=null and visitorName!=""'>
+            AND uv.name=#{visitorName}
+        </if>
+        <if test=' startDate!=null and startDate!="" '>
+            AND DATE(s.start_time)=#{startDate}
+        </if>
+        ORDER BY s.id DESC
+    </select>
+</mapper>

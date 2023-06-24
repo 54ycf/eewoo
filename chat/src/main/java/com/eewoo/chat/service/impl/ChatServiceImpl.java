@@ -225,6 +225,11 @@ public class ChatServiceImpl implements ChatService {
         WebSocketServer.sessionIdChatSCMap.remove(senderChatInfo.getSessionId()); //聊天记录从内存删除
 
         platformFeign.endSCSession(senderChatInfo.getSessionId(), getToken());
+
+        String senderKey = senderChatInfo.getSenderKey();
+        String receiverKey = senderChatInfo.getReceiverKey();
+        WebSocketServer.sendMessage(SR.endSCNotify(senderChatInfo.getSessionId()), WebSocketServer.sessionMap.get(senderKey));
+        WebSocketServer.sendMessage(SR.endSCNotify(senderChatInfo.getSessionId()), WebSocketServer.sessionMap.get(receiverKey));
     }
 
     @Override

@@ -95,6 +95,15 @@ public class CounselorController {
             return R.err("code =500", "error");
     }
 
+    @GetMapping("/get-consult-list")
+    public R getRealConsultList(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                                @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+                                @RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "date", required = false) String date)
+    {
+        PageInfo<SessionResponse> sessionResponses=counselorService.getCounselorRelatedSession(page,size,name,date);
+        return R.ok(sessionResponses);
+    }
     /**
      * 获得总的咨询时长
      * @return

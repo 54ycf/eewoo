@@ -1,6 +1,7 @@
 package com.eewoo.platform.service;
 
 
+import com.eewoo.common.pojo.User;
 import com.eewoo.platform.pojo.vo.request.*;
 import com.eewoo.platform.pojo.vo.response.*;
 import com.github.pagehelper.PageInfo;
@@ -97,4 +98,6 @@ public interface AdminService {
     PageInfo<AdminCounselorResponse> getCounselorList(Integer page, Integer size, String name);
 
     PageInfo<AdminSupervisorResponse> getSupervisorList(Integer page,Integer size, String name);
+
+    User getUserById(String role, Integer id);
 }

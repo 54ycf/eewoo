@@ -1,5 +1,6 @@
 package com.eewoo.platform.controller;
 
+import com.eewoo.common.pojo.User;
 import com.eewoo.platform.pojo.vo.request.*;
 import com.eewoo.common.util.R;
 import com.eewoo.platform.feign.AuthFeign;
@@ -15,7 +16,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Date;
 import java.util.List;
 
-@PreAuthorize("hasAuthority('a')")
+//@PreAuthorize("hasAuthority('a')")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -251,7 +252,11 @@ public class AdminController {
     }
 
 
-
+    @GetMapping("/user-by-id")
+    public R getUserById(@RequestParam Integer id, @RequestParam String role){
+        User user = adminService.getUserById(role, id);
+        return R.ok(user);
+    }
 
 
 

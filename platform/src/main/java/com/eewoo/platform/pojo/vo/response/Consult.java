@@ -2,12 +2,15 @@ package com.eewoo.platform.pojo.vo.response;
 
 import com.alibaba.druid.support.monitor.annotation.MTable;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.util.Date;
 
-
+@Data
 public class Consult {
 
+
+    Integer counselorId;
     Integer visitorId;
     String visitorName;
     /**
@@ -19,4 +22,12 @@ public class Consult {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endTime;
     Integer duration;
+
+    Integer visitorFeedbackScore;
+
+    String counselorFeedback;
+    String visitorFeedback;
+    String type;
+
+
 }

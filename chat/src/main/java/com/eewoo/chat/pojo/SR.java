@@ -46,12 +46,13 @@ public class SR {
         return response;
     }
 
-    public static SR forward(String content, String from, Integer sessionId) {
+    public static SR forward(String content, String from, String fromId, Integer sessionId) {
         SR response = new SR();
         response.setType("forward");
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("content", content);
         map.put("from", from);
+        map.put("fromId", fromId);
         map.put("sessionId", String.valueOf(sessionId));
         response.setData(map);
         return response;
@@ -66,6 +67,13 @@ public class SR {
         SR response = new SR();
         response.setType("commentNotify");
         response.setData(chatToken);
+        return response;
+    }
+
+    public static SR endSCNotify(Integer sessionId){
+        SR response = new SR();
+        response.setType("endSCNotify");
+        response.setData(sessionId);
         return response;
     }
 

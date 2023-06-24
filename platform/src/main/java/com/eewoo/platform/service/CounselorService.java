@@ -2,10 +2,7 @@ package com.eewoo.platform.service;
 import com.eewoo.common.pojo.Counselor;
 import com.eewoo.common.pojo.Supervisor;
 import com.eewoo.common.pojo.vo.request.SessionSCRequest;
-import com.eewoo.platform.pojo.vo.response.Consult;
-import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.SupervisorResponse;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -40,4 +37,6 @@ public interface CounselorService {
 
 
     Integer createSCSessionAndFetchID(SessionSCRequest sessionSCRequest);
+
+    PageInfo<SessionResponse> getCounselorRelatedSession(Integer page, Integer size, String name, String date);
 }

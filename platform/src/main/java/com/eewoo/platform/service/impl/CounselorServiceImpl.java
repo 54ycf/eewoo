@@ -7,10 +7,7 @@ import com.eewoo.common.pojo.vo.request.SessionSCRequest;
 import com.eewoo.common.security.LoginUser;
 import com.eewoo.platform.mapper.CounselorMapper;
 import com.eewoo.platform.pojo.model.SessionSC;
-import com.eewoo.platform.pojo.vo.response.Consult;
-import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
-import com.eewoo.platform.pojo.vo.response.SupervisorResponse;
+import com.eewoo.platform.pojo.vo.response.*;
 import com.eewoo.platform.service.CounselorService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -21,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CounselorServiceImpl implements CounselorService {
@@ -125,5 +124,20 @@ public class CounselorServiceImpl implements CounselorService {
             return session.getId();
         else
             return -1;
+    }
+
+    @Override
+    public PageInfo<SessionResponse> getCounselorRelatedSession(Integer page, Integer pageSize, String name, String date) {
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+
+        PageHelper.startPage(page, pageSize);
+        Map<String,Object> map=new HashMap<>();
+        map.put("visitorName",name);
+        map.put("startDate",date);
+        map.put("counselorId",id);
+        List<SessionResponse> sessionResponses = counselorMapper.getSessions(map);
+        PageInfo<SessionResponse> pageInfo = new PageInfo<>(sessionResponses);
+        return pageInfo;
     }
 }
