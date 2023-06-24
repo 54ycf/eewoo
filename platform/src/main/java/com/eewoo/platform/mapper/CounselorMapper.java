@@ -6,10 +6,12 @@ import com.eewoo.platform.pojo.model.SessionSC;
 import com.eewoo.platform.pojo.vo.response.Consult;
 import com.eewoo.platform.pojo.vo.response.DayScheduleCounselorResponse;
 import com.eewoo.platform.pojo.vo.response.ScheduleCounselorResponse;
+import com.eewoo.platform.pojo.vo.response.SessionResponse;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:"
@@ -27,10 +29,11 @@ public interface CounselorMapper {
 
     /**
      * 获取在session表的，并且还是与本咨询师交流的用户
-     * @param counselorId
+     * @param
+     * // visitor_id, user_visitor.username as visitor_name, start_time, end_time, duration
      * @return
      */
-    @Select("SELECT visitor_id, user_visitor.username as visitor_name, start_time, end_time, duration " +
+    @Select("select session.visitor_id, user_visitor.username as visitor_name, session.counselor_id, session.start_time, session.end_time,session.visitor_feedback,session.visitor_feedback_score, session.counselor_feedback,session.type " +
             "FROM session join user_visitor on session.visitor_id = user_visitor.id WHERE counselor_id = #{id}")
     List<Consult> getAllConsults(@Param("id") Integer counselorId);
 
@@ -75,4 +78,5 @@ public interface CounselorMapper {
     Integer insertSCSession(SessionSC session);
 
 
+    List<SessionResponse> getSessions(Map<String, Object> map);
 }

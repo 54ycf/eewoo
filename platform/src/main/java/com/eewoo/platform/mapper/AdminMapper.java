@@ -179,5 +179,6 @@ public interface AdminMapper {
 
     int batchInsertSupervisorSchedule(Map<String,Object> map);
 
-
+    @Select("SELECT username, profile FROM ${table} WHERE id = #{id}")
+    User getUserById(String table, Integer id);
 }

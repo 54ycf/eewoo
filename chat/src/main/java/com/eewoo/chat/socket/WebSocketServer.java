@@ -127,7 +127,7 @@ public class WebSocketServer {
             ChatScheduler.updateTime(chatToken);//更新chatToken时间
             sessionIdChatMap.get(chatInfo.getSessionId()).getMessages().add(new Message(chatInfo.getSenderName(),chatInfo.getReceiverName(),msg.getContent(),new Date().toString()));//聊天记录先存在内存，加一条
             if (forwardMap.containsKey(chatInfo.getSessionId())) {//说明请求了督导，有东西
-                WebSocketServer.sendMessage(SR.forward(msg.getContent(), chatInfo.getSenderKey(), ididMap.get(chatInfo.getSessionId())), forwardMap.get(chatInfo.getSessionId()));
+                WebSocketServer.sendMessage(SR.forward(msg.getContent(), chatInfo.getSenderName(), chatInfo.getSenderKey(), ididMap.get(chatInfo.getSessionId())), forwardMap.get(chatInfo.getSessionId()));
             }
         }else {
             //咨询师-督导聊天

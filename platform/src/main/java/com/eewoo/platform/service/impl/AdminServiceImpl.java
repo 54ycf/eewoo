@@ -536,5 +536,11 @@ public class AdminServiceImpl implements AdminService {
         return result;
     }
 
+    @Override
+    public User getUserById(String role, Integer id) {
+        String table = Constant.roleTableMap.get(role);
+        return adminMapper.getUserById(table, id);
+    }
+
 
 }

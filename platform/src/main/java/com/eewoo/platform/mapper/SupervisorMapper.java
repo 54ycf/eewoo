@@ -62,7 +62,7 @@ public interface SupervisorMapper {
             "where supervisor_id = #{id}")
     List<ScheduleSupervisorResponse> getSupervisorScheduleByWeek(Integer id);
 
-    @Select("select #{username} as supervisor_name , supervisor_id, user_counselor.username as counselor_name, counselor_id, start_time, end_time, duration from session_sc join user_counselor on session_sc.counselor_id = user_counselor.id where supervisor_id = #{id} ")
+    @Select("select session_sc.id as id, #{username} as supervisor_name , supervisor_id, user_counselor.username as counselor_name, counselor_id, start_time, end_time, duration from session_sc join user_counselor on session_sc.counselor_id = user_counselor.id where supervisor_id = #{id} ")
     List<SupervisorAidSession> fetchSupervisorAidSession(Integer id, String username);
     //传入督导的名字，减少join一张不必要的督导账户表格了
 
