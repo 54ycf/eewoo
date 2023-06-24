@@ -56,10 +56,10 @@ public class VisitorServiceImpl implements VisitorService {
         List<Counselor> counselors= visitorMapper.getCounselors();
         List<CounselorResponse> counselorResponses=new ArrayList<>();
         Counselor counselor=null;
-        R r = chatFeign.getOnlineCounselorIds(getToken());
+        R<List<Integer>> r = chatFeign.getOnlineCounselorIds(getToken());
         if( r == null)
             throw new RuntimeException("Remote call failed");
-        List  list1 = (List)r.getData();
+        List<Integer>  list1 = r.getData();
         for (int i=0;i<counselors.size();i++){
             CounselorResponse counselorResponse=new CounselorResponse();
             counselor=counselors.get(i);
