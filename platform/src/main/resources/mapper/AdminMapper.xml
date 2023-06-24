@@ -98,6 +98,7 @@
         <if test=' startDate!=null and startDate!="" '>
             AND DATE(s.start_time)=#{startDate}
         </if>
+        ORDER BY s.id DESC
     </select>
 
 </mapper>
