@@ -19,7 +19,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class SupervisorServiceImpl implements SupervisorService {
     @Autowired
@@ -151,6 +154,21 @@ public class SupervisorServiceImpl implements SupervisorService {
 
         mapper.endSCSessionInMapper(sessionId,endTime,Integer.parseInt(String.valueOf(duration)));
 
+    }
+
+    @Override
+    public PageInfo<SessionSCResponse> getSessions(Integer page, Integer pageSize, String name, String date) {
+
+        User user = ((LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        Integer id = user.getId();
+        PageHelper.startPage(page, pageSize);
+        Map<String,Object> map=new HashMap<>();
+        map.put("counselorName",name);
+        map.put("startDate",date);
+        map.put("supervisorId",id);
+        List<SessionSCResponse> sessionResponses = mapper.getSessions(map);
+        PageInfo<SessionSCResponse> pageInfo = new PageInfo<>(sessionResponses);
+        return pageInfo;
     }
 
 

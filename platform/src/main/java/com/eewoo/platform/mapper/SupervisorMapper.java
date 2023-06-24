@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -72,4 +73,6 @@ public interface SupervisorMapper {
 
     @Select("select start_time from session_sc where id = #{sessionId}")
     Date getStartTimeById(Integer sessionId);
+
+    List<SessionSCResponse> getSessions(Map<String, Object> map);
 }

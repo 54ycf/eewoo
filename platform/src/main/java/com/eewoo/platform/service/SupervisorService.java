@@ -31,4 +31,6 @@ public interface SupervisorService {
     PageInfo<SupervisorAidSession> getSupervisorAidSession(Integer page, Integer size);
 
     void endSCSession(Integer sessionId);
+
+    PageInfo<SessionSCResponse> getSessions(Integer page, Integer size, String name, String date);
 }

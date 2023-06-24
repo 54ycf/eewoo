@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eewoo.platform.mapper.SupervisorMapper">
+
+    <select id="getSessions" parameterType="java.util.Map" resultType="com.eewoo.platform.pojo.vo.response.SessionSCResponse">
+        SELECT sc.id AS id, sc.supervisor_id AS supervisor_id, user_supervisor.name AS supervisor_name, sc.counselor_id AS counselor_id,
+        uc.name AS counselor_name, sc.start_time AS start_time, sc.end_time AS end_time, sc.duration AS duration
+
+        FROM `session_sc` AS sc
+            JOIN user_supervisor on sc.supervisor_id = user_supervisor.id
+        JOIN user_counselor AS uc ON sc.counselor_id=uc.id
+        WHERE sc.supervisor_id = #{supervisorId}
+        <if test='counselorName!=null and counselorName!=""'>
+            AND uc.name=#{counselorName}
+        </if>
+        <if test=' startDate!=null and startDate!="" '>
+            AND DATE(sc.start_time)=#{startDate}
+        </if>
+
+    </select>
+
+</mapper>
